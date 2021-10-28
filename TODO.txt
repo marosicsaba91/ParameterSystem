@@ -1,0 +1,39 @@
+Csütörtök:   Parameter & Trigger System
+    ---- Component as parameters or events ----
+    ---- Window for parameters or events ----
+    ---- Scrollable Window ----
+    ---- Closable No Category Group ----
+    ---- Multi Level Categories ----
+    ---- Selecting Objects on Window ----
+    ---- Join: Categories & Name => Path ----
+    ---- Fix Error: The same field name is serialized multiple times in the class or its parent class ----
+    ---- ScriptableObjects as parameters or events ---
+    ---- Finding Global Parameters ---
+    ---- Remove Global Parameters ---
+    ---- Properties For Parameters ---
+    ---- Parameter Component Drawer (Minimal) ---
+    
+    Parameter Property 
+    Fix Parameter Filter SelectBug
+    Filters for the window
+        GameObject
+        Name
+        Category
+        Type
+    Visual Upgrade
+
+Péntek:
+    State Transition:
+        On StateMachine
+        Enter, Exit, Change, Jump, StepForward, StepBack
+        Depends on one or more Parameter
+        No sub-classes
+        One Event can trigger only one transition
+        
+    State Change Events
+        Special Scene effect
+        On StateMachine
+
+Vasárnap:
+    Parameter Dashboard
+
