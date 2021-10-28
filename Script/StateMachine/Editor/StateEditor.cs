@@ -4,7 +4,7 @@ using MUtility;
 using UnityEditor; 
 using UnityEngine;
 
-namespace StateMachineSystem
+namespace PlayBox
 {
 [CustomEditor(typeof(State))]
 public class StateEditor : UnityEditor.Editor
@@ -86,9 +86,9 @@ public class StateEditor : UnityEditor.Editor
 		child.AddComponent<State>();
 		child.name = "New State";
 		child.transform.parent = go.transform;
-		child.transform.localPosition = Vector3.zero;
+		child.transform.localPosition = UnityEngine.Vector3.zero;
 		child.transform.localRotation = Quaternion.identity;
-		child.transform.localScale = Vector3.one;
+		child.transform.localScale = UnityEngine.Vector3.one;
 		state.UpdateState();
 		Undo.RegisterCreatedObjectUndo(child,"Sub-State Created");
 	}
@@ -200,7 +200,7 @@ public class StateEditor : UnityEditor.Editor
 		if(state == null)
 			return;
 		
-		Vector2 textSize =_guiStyle.CalcSize(new GUIContent(gameObject.name));
+		UnityEngine.Vector2 textSize =_guiStyle.CalcSize(new GUIContent(gameObject.name));
 		var iconRect = new Rect(selectionRect)
 		{
 			x = selectionRect.x + textSize.x + 25,

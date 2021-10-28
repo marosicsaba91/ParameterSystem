@@ -1,7 +1,7 @@
  using MUtility; 
  using UnityEngine;
 
-namespace StateMachineSystem
+namespace PlayBox
 {
 public class StateTransitionPressKey : StateTransition
 {

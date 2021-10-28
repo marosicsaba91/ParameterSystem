@@ -3,7 +3,7 @@ using MUtility;
 using UnityEditor;
 using UnityEngine;
 
-namespace StateMachineSystem
+namespace PlayBox
 {
 static class StateMachineIconHelper
 {

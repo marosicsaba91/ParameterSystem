@@ -1,4 +1,4 @@
-﻿namespace StateMachineSystem
+﻿namespace PlayBox
 {
 public enum StateMachineType
 {

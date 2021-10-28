@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace StateMachineSystem
+namespace PlayBox
 {
 [RequireComponent(typeof(State))]
 public abstract class StateEffect : MonoBehaviour

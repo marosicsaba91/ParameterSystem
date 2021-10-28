@@ -3,14 +3,14 @@ using MUtility;
 using UnityEditor;
 using UnityEngine;
 
-namespace StateMachineSystem
+namespace PlayBox
 {
-[CustomEditor(typeof(ParameterComponent), editorForChildClasses: true)]
+[CustomEditor(typeof(Parameter), editorForChildClasses: true)]
 public class ParameterComponentEditor : Editor
 {
     public override void OnInspectorGUI()
     { 
-        var component = target as ParameterComponent;
+        var component = target as Parameter;
 
         Rect fullRect = EditorGUILayout.GetControlRect(hasLabel: true, height: 16f, EditorStyles.layerMaskField);
         fullRect.height += 2;
@@ -28,25 +28,25 @@ public class ParameterComponentEditor : Editor
         GUI.enabled = component.isSettingEnabled;
         switch (component)
         {
-            case BoolComponent boolComponent:
+            case BoolParameter boolComponent:
                 boolComponent.Value = EditorGUI.Toggle(valueRect, boolComponent.Value);
                 break;
-            case FloatComponent floatComponent:
+            case FloatParameter floatComponent:
                 floatComponent.Value = EditorGUI.FloatField(valueRect, floatComponent.Value);
                 break;
-            case IntComponent intComponent:
+            case IntParameter intComponent:
                 intComponent.Value = EditorGUI.IntField(valueRect, intComponent.Value);
                 break;
-            case StringComponent stringComponent:
+            case StringParameter stringComponent:
                 stringComponent.Value = EditorGUI.TextField(valueRect, stringComponent.Value);
                 break;
-            case Vector2Component vector2Component: 
+            case Vector2Parameter vector2Component: 
                 vector2Component.Value = EditorGUI.Vector2Field(valueRect, GUIContent.none, vector2Component.Value);
                 break;
-            case Vector3Component vector3Component: 
+            case Vector3Parameter vector3Component: 
                 vector3Component.Value = EditorGUI.Vector3Field(valueRect, GUIContent.none, vector3Component.Value);
                 break;
-            case TriggerComponent triggerComponent: 
+            case TriggerParameter triggerComponent: 
                 if (GUI.Button(valueRect, "Trigger"))
                     triggerComponent.OnTriggered();
                 break;

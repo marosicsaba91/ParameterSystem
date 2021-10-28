@@ -3,7 +3,7 @@ using System.Linq;
 using MUtility;
 using UnityEngine;
 
-namespace StateMachineSystem
+namespace PlayBox
 {
 
 [DisallowMultipleComponent]

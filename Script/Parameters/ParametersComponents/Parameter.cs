@@ -5,11 +5,11 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 
-namespace StateMachineSystem
+namespace PlayBox
 {
-public abstract class ParameterComponent : MonoBehaviour
-{ 
-    [FormerlySerializedAs("path")] [SerializeField] PathProperty pathString; 
+public abstract class Parameter : MonoBehaviour
+{
+    [FormerlySerializedAs("path")] [SerializeField] PathProperty pathString = new PathProperty(); 
     [FormerlySerializedAs("pathStrings")] [SerializeField, HideInInspector] string[] path = Array.Empty<string>();
     [SerializeField] public bool isSettingEnabled = true;
     [SerializeField] public List<Object> otherObjectChangingWithParameter;
@@ -46,17 +46,14 @@ public abstract class ParameterComponent : MonoBehaviour
         get
         {
             string p = pathString.Value;
-            return p == string.Empty ? name : p + " / " + name;
+            return p == string.Empty ? name : name + " : " + p;
         }
     }
-
-    internal abstract void Subscribe(Parameter parameter);
-    internal abstract void UnSubscribe(Parameter parameter);
-
+    
     [Serializable]
-    class PathProperty : InspectorProperty<ParameterComponent, string>
+    class PathProperty : InspectorProperty<Parameter, string>
     {
-        protected override void SetValue(ParameterComponent parentObject, string value)
+        protected override void SetValue(Parameter parentObject, string value)
         {
             parentObject.path = GetCategoriesFromString(value);
             base.SetValue(parentObject, GetCategoriesStringCategories(parentObject.path));
@@ -81,18 +78,11 @@ public abstract class ParameterComponent : MonoBehaviour
         static string GetCategoriesStringCategories(IEnumerable<string> categories) =>
             string.Join(" / ", categories);
         
-        protected override string Text(ParameterComponent parentObject, string originalLabel) => "Path";
+        protected override string Text(Parameter parentObject, string originalLabel) => "Path";
     }
 }
 
-public abstract class ParameterComponent<TParameter> : ParameterComponent where TParameter : Parameter
-{
-    [SerializeField] internal List<TParameter> subscribers = new List<TParameter>();
-    internal override void Subscribe(Parameter subscriber) => subscribers.Add((TParameter)subscriber);
-    internal override void UnSubscribe(Parameter subscriber) => subscribers.Remove((TParameter)subscriber);
-}
-
-public abstract class ValueComponent<T, TParameter> : ParameterComponent<TParameter> where TParameter : Parameter
+public abstract class ValueParameter<T> : Parameter
 {
     [SerializeField] T value;
      

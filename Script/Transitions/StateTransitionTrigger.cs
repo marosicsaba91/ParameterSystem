@@ -1,6 +1,6 @@
  using UnityEngine;
 
-namespace StateMachineSystem
+namespace PlayBox
 {
 public class StateTransitionTrigger : StateTransition
 {

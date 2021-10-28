@@ -2,7 +2,7 @@
  
 using UnityEditor; 
 
-namespace StateMachineSystem
+namespace PlayBox
 { 
 [CustomEditor(typeof(StateEffect), editorForChildClasses:true)]
 public class StateEffectEditor : Editor

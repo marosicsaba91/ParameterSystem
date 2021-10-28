@@ -2,23 +2,23 @@
 using System;
 using System.Collections.Generic;
 
-namespace StateMachineSystem
+namespace PlayBox
 {
 class ParameterTree
 {
     public string categoryName;
     public ParameterTree parent;
-    public List<ParameterComponent> parameters;
+    public List<Parameter> parameters;
     public SortedDictionary<string, ParameterTree> childCategories;
 
-    public ParameterTree(IEnumerable<ParameterComponent> allParams)
+    public ParameterTree(IEnumerable<Parameter> allParams)
     {
         childCategories = new SortedDictionary<string, ParameterTree>();
-        parameters = new List<ParameterComponent>();
+        parameters = new List<Parameter>();
         parent = null;
         categoryName = string.Empty;
         
-        foreach (ParameterComponent param in allParams)
+        foreach (Parameter param in allParams)
         {
             IEnumerable<string> paramCategories = param.Path;
             ParameterTree childCategory = this;
@@ -38,7 +38,7 @@ class ParameterTree
             nodes.Value.SortParametersRecursively();
     }
 
-    int ParameterSorting(ParameterComponent x, ParameterComponent y) => 
+    int ParameterSorting(Parameter x, Parameter y) => 
         string.Compare(x.name, y.name, StringComparison.Ordinal);
     
 
@@ -47,7 +47,7 @@ class ParameterTree
         this.categoryName = categoryName;
         this.parent = parent;
         childCategories = new SortedDictionary<string, ParameterTree>();
-        parameters = new List<ParameterComponent>();
+        parameters = new List<Parameter>();
     }
 
     ParameterTree GetChild(string category)

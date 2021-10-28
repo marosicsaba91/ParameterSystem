@@ -1,7 +1,7 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace StateMachineSystem
+namespace PlayBox
 {
 public class StateEffectActivate : StateEffect
 {

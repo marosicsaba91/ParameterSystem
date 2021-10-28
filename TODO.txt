@@ -14,7 +14,10 @@ Csütörtök:   Parameter & Trigger System
     ---- Parameter Component Drawer (Minimal) ---
     
     Parameter Property 
-    Fix Parameter Filter SelectBug
+    Fix Enum Select:
+        Parameter Filter SelectBug
+        Short Width
+        
     Filters for the window
         GameObject
         Name

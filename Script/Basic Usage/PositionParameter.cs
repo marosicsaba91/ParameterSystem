@@ -1,11 +1,12 @@
-﻿using StateMachineSystem; 
+﻿using System.Collections.Generic;
+using PlayBox; 
 using UnityEngine;
 
- [ExecuteInEditMode]
+[ExecuteInEditMode]
 public class PositionParameter : MonoBehaviour
 {
-    [SerializeField] Vector3Parameter position; 
-    [SerializeField] Vector3Parameter localPosition;
+    [LocalParameter, SerializeField] Vector3Parameter position; 
+    [LocalParameter, SerializeField] Vector3Parameter localPosition;
 
     void OnValidate() => Setup();
 
@@ -15,11 +16,13 @@ public class PositionParameter : MonoBehaviour
     {
         if (position != null)
         { 
+            position.otherObjectChangingWithParameter = new List<Object> { transform};
             position.valueChanged -= OnPositionChanged;
             position.valueChanged += OnPositionChanged;
         } 
         if (localPosition != null)
-        {   
+        {
+            localPosition.otherObjectChangingWithParameter = new List<Object> { transform};
             localPosition.valueChanged -= OnLocalPositionChanged;
             localPosition.valueChanged += OnLocalPositionChanged;
         }

@@ -6,7 +6,7 @@ using MUtility;
 using UnityEditor;
 using UnityEngine;
 
-namespace StateMachineSystem
+namespace PlayBox
 {
 [CustomEditor(typeof(StateTransition), editorForChildClasses: true)]
 public class StateTransitionEditor : Editor

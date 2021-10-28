@@ -3,35 +3,43 @@ using System.Collections.Generic;
 using System.Linq; 
 using Object = UnityEngine.Object;
 
-namespace StateMachineSystem
+namespace PlayBox
 {
 static class ParameterHelper
-{
-    static readonly HashSet<ParameterComponent> parameters = new HashSet<ParameterComponent>();
-    
-    static HashSet<ParameterComponent> AllParameters<TFilter>() where TFilter : ParameterComponent
-    {
-        parameters.Clear();
-        foreach (Object obj in Object.FindObjectsOfType(typeof(ParameterComponent)))
+{ 
+    internal static IEnumerable<Parameter> AllParameters() => 
+        Object.FindObjectsOfType(typeof(Parameter)).Cast<Parameter>();
+
+    static IEnumerable<Parameter> AllParameters<TFilter>() where TFilter : Parameter
+    { 
+        foreach (Object obj in Object.FindObjectsOfType(typeof(Parameter)))
         {
             if (obj is TFilter param)
-                parameters.Add(param);
-        }         
-        return parameters;
+                yield return param;
+        }          
     }  
-
-    internal static IReadOnlyCollection<ParameterComponent> GetParameters() => AllParameters<ParameterComponent>();
     
-    internal static List<ParameterComponent> GetParametersSorted<TFilter>() where TFilter : ParameterComponent
+    static IEnumerable<Parameter> AllParameters(Type filter) => 
+        Object.FindObjectsOfType(filter).Cast<Parameter>();
+  
+    internal static List<Parameter> GetParametersSorted<TFilter>() where TFilter : Parameter
     {
-        List<ParameterComponent> sorted = AllParameters<TFilter>().ToList();
+        List<Parameter> sorted = AllParameters<TFilter>().ToList();
         sorted.Sort(ParameterSorting);
         return sorted;
     }
- 
-    public static ParameterTree GetSceneParameterTree() => new ParameterTree(GetParameters());
+    
+    internal static List<Parameter> GetParametersSorted(Type filter) 
+    {
+        List<Parameter> sorted = AllParameters(filter).ToList();
+        sorted.Sort(ParameterSorting);
+        return sorted;
+    }
 
-    static int ParameterSorting(ParameterComponent x, ParameterComponent y)
+ 
+    public static ParameterTree GetSceneParameterTree() => new ParameterTree(AllParameters());
+
+    static int ParameterSorting(Parameter x, Parameter y)
     {
         IEnumerator<string> xCategories = x.Path.GetEnumerator(); 
         IEnumerator<string> yCategories = y.Path.GetEnumerator();   

@@ -8,7 +8,7 @@ using UnityEngine;
 using System.Linq;
 using Object = UnityEngine.Object;
 
-namespace StateMachineSystem
+namespace PlayBox
 {
 public class ParameterWindow : EditorWindow
 {
@@ -21,14 +21,9 @@ public class ParameterWindow : EditorWindow
     [SerializeField] Vector2 scrollPosition;
     const string editorPrefsKey = "Parameter Window Info";
 
-    static GUIStyle _boldFoldoutStyle;
-    public static GUIStyle BoldFoldoutStyle => 
-        _boldFoldoutStyle = _boldFoldoutStyle ?? new GUIStyle(EditorStyles.foldout)
-            {fontStyle = FontStyle.Bold};
-    
     static GUIStyle _labelStyle;
     public static GUIStyle LabelStyle =>
-        _labelStyle = _labelStyle ?? new GUIStyle(GUI.skin.label){alignment = TextAnchor.MiddleLeft};
+        _labelStyle = _labelStyle ?? new GUIStyle(GUI.skin.label){fontSize = 10, alignment = TextAnchor.MiddleLeft};   
     
     public void OnEnable()
     {
@@ -62,8 +57,9 @@ public class ParameterWindow : EditorWindow
         _space = EditorGUIUtility.standardVerticalSpacing;
         ParameterTree parameterTree = ParameterHelper.GetSceneParameterTree();
         scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
- 
+
         _lineCount = 0;
+        EditorGUI.indentLevel = -1;
         DrawTree(parameterTree, openedElements);
 
         EditorGUILayout.EndScrollView();
@@ -71,21 +67,27 @@ public class ParameterWindow : EditorWindow
 
 
     static void DrawTree(ParameterTree tree, List<string> openedElements)
-    {
+    { 
         List<string> categories = tree.Categories().Reverse().ToList();
         bool emptyCategory = categories.Count == 1 && categories.First() == string.Empty;
-        if (!emptyCategory)
-            categories.RemoveAt(0);
-        string categoryText = emptyCategory ? string.Empty : string.Join(" / ", categories); 
+        string categoryText = emptyCategory ? string.Empty : string.Join(" / ", categories);
         var open = true;
-        if (!emptyCategory || tree.parameters.Any())
+        var pos = new Rect();
+        var openable = false;
+        if (!emptyCategory)
         {
-            open = emptyCategory || openedElements.Contains(categoryText);
-            if (!emptyCategory)
+            open = openedElements.Contains(categoryText);
+            openable = !tree.childCategories.IsNullOrEmpty() || tree.parameters.Count > 1;
+            pos = EditorGUILayout.GetControlRect(true, _lineH);
+
+            if (openable)
             {
-                Rect pos = EditorGUILayout.GetControlRect(true, _lineH);
-                DrawLineColor(pos, false);
-                bool newOpen = EditorGUI.Foldout(pos, open, categories.Last(), BoldFoldoutStyle);
+                bool isSelected = tree.parameters.Count == 1 && Selection.Contains(tree.parameters[0].gameObject);
+                DrawRowColor(pos, isSelected);
+                bool newOpen = EditorGUI.Foldout(pos, open, GUIContent.none);
+                EditorGUI.indentLevel++;
+                EditorGUI.LabelField(pos,  categories.Last());
+                EditorGUI.indentLevel--;
                 if (open != newOpen)
                 {
                     open = newOpen;
@@ -95,45 +97,80 @@ public class ParameterWindow : EditorWindow
                         openedElements.Remove(categoryText);
                 }
             }
+            else
+                open = true;
         }
 
-        if (!open) return;
+
         if (!emptyCategory)
-            EditorGUI.indentLevel++;
-        foreach (ParameterComponent parameter in tree.parameters)
         {
-            Rect parameterPos = EditorGUILayout.GetControlRect(hasLabel: true, _lineH);
-            DrawParameter(parameterPos, parameter);
+            if (tree.parameters.Count == 1)
+            {
+                GUIContent content =
+                    openable ? GUIContent.none : new GUIContent(tree.parameters[0].Path.LastOrDefault());
+                DrawParameter(pos, tree.parameters[0], content);
+            }
+
+            else if (open)
+            {
+                EditorGUI.indentLevel++;
+                foreach (Parameter parameter in tree.parameters)
+                {
+                    Rect parameterPos = EditorGUILayout.GetControlRect(hasLabel: true, _lineH);
+                    GUIContent content = EditorGUIUtility.IconContent("GameObject Icon");
+                    content.text = parameter.gameObject.name;
+                    DrawParameter(parameterPos, parameter, content, isGameObject: true);
+                }
+
+                EditorGUI.indentLevel--;
+            }
         }
+
+        if (!open)
+        {
+            EditorGUI.indentLevel--;
+            return;
+        }
+
 
         foreach (KeyValuePair<string, ParameterTree> child in tree.childCategories)
+        {
+            EditorGUI.indentLevel++;
             DrawTree(child.Value, openedElements);
-        if (!emptyCategory)
-            EditorGUI.indentLevel--;
+        }
+
+        EditorGUI.indentLevel--;
     }
+
     const float invisibleLabelWidth = 25;
 
-    static void DrawParameter(Rect position, ParameterComponent parameterComponent)
+    static void DrawParameter(Rect position, Parameter parameter, GUIContent name, bool isGameObject = false)
     { 
+        EditorGUI.indentLevel++;
         float valueWidth =  2f * position.width / 5f;
         EditorGUIUtility.labelWidth = invisibleLabelWidth;  
  
-        Object obj = parameterComponent.gameObject;
-        
-        GUIContent content = EditorGUIUtility.IconContent("GameObject Icon");
-        content.text = obj.name; 
-        content.tooltip = "Parameter as Component";
+        Object obj = parameter.gameObject;
         
         bool selected = Selection.Contains(obj);
-        DrawLineColor(position, selected);
+        if (name != GUIContent.none)
+        {
+            DrawRowColor(position, selected);  
+            if (isGameObject)
+            {
+                GUI.color = new Color(1, 1, 1, 0.75f);
+                EditorGUI.LabelField(position, name, LabelStyle);
+                GUI.color = Color.white;
+            }
+            else
+                EditorGUI.LabelField(position, name);
+        }
 
-        DrawProperty(position, valueWidth, parameterComponent, content);
+        DrawProperty(position, valueWidth, parameter);
         
         GUI.enabled = true;
         position.width -= valueWidth;
- 
-        
-        EditorGUI.LabelField(position, content);
+  
         position.width -= invisibleLabelWidth;
         if (GUI.Button(position, "", LabelStyle))
         {
@@ -150,9 +187,10 @@ public class ParameterWindow : EditorWindow
             else
                 Selection.objects = selected ? Array.Empty<Object>() : new[] { obj };
         }
+        EditorGUI.indentLevel--;
     }
 
-    static void DrawLineColor(Rect position, bool selected)
+    static void DrawRowColor(Rect position, bool selected)
     {
         var selectionPos = new Rect(
             position.x - _space, position.y - (_space / 2),
@@ -165,54 +203,47 @@ public class ParameterWindow : EditorWindow
         _lineCount++;
     }
 
-    static void DrawProperty(Rect position, float valueWidth, ParameterComponent parameterComponent, GUIContent content)
+    static void DrawProperty(Rect position, float valueWidth, Parameter parameter)
     {
         var fullValuePos = new Rect(
-            position.xMax - (invisibleLabelWidth + valueWidth),
+            position.xMax - (invisibleLabelWidth + valueWidth + 2),
             position.y,
             invisibleLabelWidth + valueWidth,
             position.height);
 
         var valuePos = new Rect(position.xMax - valueWidth, position.y, valueWidth, position.height); 
-        var recordText = $"Parameter Value Changed: {parameterComponent.PathString} / {parameterComponent.name}";
+        var recordText = $"Parameter Value Changed: {parameter.PathString} / {parameter.name}";
 
         EditorGUI.BeginChangeCheck();
-        Undo.RecordObjects(parameterComponent.ChangingObjects.ToArray(), recordText);
+        Undo.RecordObjects(parameter.ChangingObjects.ToArray(), recordText);
 
-        GUI.enabled = parameterComponent.isSettingEnabled;
+        GUI.enabled = parameter.isSettingEnabled;
         int indent = EditorGUI.indentLevel;
         EditorGUI.indentLevel = 0;
         
-        switch (parameterComponent)
+        switch (parameter)
         {
-            case BoolComponent boolComponent:
-                content.tooltip = $"Bool {content.tooltip}"; 
+            case BoolParameter boolComponent: 
                 boolComponent.Value = EditorGUI.Toggle(valuePos, boolComponent.Value);
                 break;
-            case FloatComponent floatComponent:
-                content.tooltip = $"Float {content.tooltip}";
+            case FloatParameter floatComponent: 
                 floatComponent.Value = EditorGUI.FloatField(fullValuePos, " ", floatComponent.Value);
                 break;
-            case IntComponent intComponent:
-                content.tooltip = $"Int {content.tooltip}";
+            case IntParameter intComponent: 
                 intComponent.Value = EditorGUI.IntField(fullValuePos, " ", intComponent.Value);
                 break;
-            case StringComponent stringComponent:
-                content.tooltip = $"Text {content.tooltip}";
+            case StringParameter stringComponent: 
                 stringComponent.Value = EditorGUI.TextField(valuePos, stringComponent.Value);
                 break;
-            case Vector2Component vector2Component:
-                fullValuePos.y -= _lineH + _space; // HACK
-                content.tooltip = $"Vector2 {content.tooltip}";
+            case Vector2Parameter vector2Component:
+                fullValuePos.y -= _lineH + _space; // HACK 
                 vector2Component.Value = EditorGUI.Vector2Field(valuePos, GUIContent.none, vector2Component.Value);
                 break;
-            case Vector3Component vector3Component:
-                fullValuePos.y -= _lineH + _space; // HACK
-                content.tooltip = $"Vector3 {content.tooltip}";
+            case Vector3Parameter vector3Component:
+                fullValuePos.y -= _lineH + _space; // HACK 
                 vector3Component.Value = EditorGUI.Vector3Field(valuePos, GUIContent.none, vector3Component.Value);
                 break;
-            case TriggerComponent triggerComponent:
-                content.tooltip = $"Trigger {content.tooltip}";
+            case TriggerParameter triggerComponent: 
                 if (GUI.Button(valuePos, "Trigger"))
                     triggerComponent.OnTriggered();
                 break;
@@ -227,7 +258,7 @@ public class ParameterWindow : EditorWindow
 
         if (EditorGUI.EndChangeCheck())
         {
-            foreach (Object dirty in parameterComponent.ChangingObjects)
+            foreach (Object dirty in parameter.ChangingObjects)
             {
                 if (!(dirty is ScriptableObject)) continue; 
                 EditorUtility.SetDirty(dirty);
