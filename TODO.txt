@@ -12,18 +12,15 @@ Csütörtök:   Parameter & Trigger System
     ---- Remove Global Parameters ---
     ---- Properties For Parameters ---
     ---- Parameter Component Drawer (Minimal) ---
-    
-    Parameter Property 
-    Fix Enum Select:
-        Parameter Filter SelectBug
-        Short Width
-        
+            
     Filters for the window
         GameObject
         Name
         Category
         Type
-    Visual Upgrade
+    
+    Fix Enum Select:
+        Parameter Filter SelectBug 
 
 Péntek:
     State Transition:
