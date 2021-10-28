@@ -170,9 +170,8 @@ MonoBehaviour:
   path:
   - Test Category
   isSettingEnabled: 1
-  isPathLocked: 0
-  changingObjects:
-  - {fileID: 155424182}
+  otherObjectChangingWithParameter: []
+  subscribers: []
   value: 1
 --- !u!1 &253751707
 GameObject:
@@ -185,6 +184,7 @@ GameObject:
   - component: {fileID: 253751710}
   - component: {fileID: 253751709}
   - component: {fileID: 253751708}
+  - component: {fileID: 253751711}
   m_Layer: 0
   m_Name: FlyingObject
   m_TagString: Untagged
@@ -209,11 +209,11 @@ MonoBehaviour:
   path:
   - Position
   isSettingEnabled: 1
-  isPathLocked: 1
-  changingObjects:
-  - {fileID: 253751708}
-  - {fileID: 253751710}
-  value: {x: 8.46, y: -10.76, z: -9.01}
+  otherObjectChangingWithParameter: []
+  subscribers:
+  - parameterComponent: {fileID: 253751708}
+    ownValue: {x: 6.76, y: -10.76, z: -9.01}
+  value: {x: 6.76, y: -10.76, z: -9.01}
 --- !u!114 &253751709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,8 +226,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c2fc19cfdad0446b560eb0df1b0f49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {fileID: 0}
-  localPosition: {fileID: 0}
+  position:
+    parameterComponent: {fileID: 253751708}
+    ownValue: {x: 6.76, y: -10.76, z: -9.01}
+  localPosition:
+    parameterComponent: {fileID: 253751711}
+    ownValue: {x: 6.76, y: -10.76, z: -9.01}
 --- !u!4 &253751710
 Transform:
   m_ObjectHideFlags: 0
@@ -236,12 +240,34 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 253751707}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.46, y: -10.76, z: -9.01}
+  m_LocalPosition: {x: 6.76, y: -10.76, z: -9.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &253751711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253751707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a27272171ccf47b292cc5ff83930ec9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pathString:
+    value: Local Position
+  path:
+  - Local Position
+  isSettingEnabled: 1
+  otherObjectChangingWithParameter: []
+  subscribers:
+  - parameterComponent: {fileID: 253751711}
+    ownValue: {x: 6.76, y: -10.76, z: -9.01}
+  value: {x: 6.76, y: -10.76, z: -9.01}
 --- !u!1 &316311669
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,9 +416,8 @@ MonoBehaviour:
   path:
   - TestIntGroup
   isSettingEnabled: 1
-  isPathLocked: 0
-  changingObjects:
-  - {fileID: 712351552}
+  otherObjectChangingWithParameter: []
+  subscribers: []
   value: 0
 --- !u!1 &718587843
 GameObject:
@@ -443,9 +468,8 @@ MonoBehaviour:
   - Some Path
   - Other
   isSettingEnabled: 1
-  isPathLocked: 0
-  changingObjects:
-  - {fileID: 718587845}
+  otherObjectChangingWithParameter: []
+  subscribers: []
   value: {x: 0, y: 0}
 --- !u!1 &808125332
 GameObject:
@@ -495,9 +519,8 @@ MonoBehaviour:
   path:
   - Some Path
   isSettingEnabled: 1
-  isPathLocked: 0
-  changingObjects:
-  - {fileID: 808125334}
+  otherObjectChangingWithParameter: []
+  subscribers: []
   value: 0
 --- !u!1 &995060527
 GameObject:
@@ -598,9 +621,8 @@ MonoBehaviour:
   - Some Path
   - One
   isSettingEnabled: 1
-  isPathLocked: 0
-  changingObjects:
-  - {fileID: 1042746772}
+  otherObjectChangingWithParameter: []
+  subscribers: []
   value: 0
 --- !u!1 &1057962179
 GameObject:
@@ -638,7 +660,7 @@ MonoBehaviour:
   - {fileID: 2107941450}
   - {fileID: 1122956844}
   selectedStates:
-  - {fileID: 1122956844}
+  - {fileID: 1293731520}
   defaultStates:
   - {fileID: 1293731520}
   parentStateMachine: {fileID: 0}
@@ -801,9 +823,8 @@ MonoBehaviour:
   - Some Path
   - Other
   isSettingEnabled: 1
-  isPathLocked: 0
-  changingObjects:
-  - {fileID: 1134887288}
+  otherObjectChangingWithParameter: []
+  subscribers: []
 --- !u!1 &1174354784
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,8 +1001,8 @@ MonoBehaviour:
   path:
   - Bools
   isSettingEnabled: 1
-  isPathLocked: 1
-  changingObjects: []
+  otherObjectChangingWithParameter: []
+  subscribers: []
   value: 0
 --- !u!114 &1243730247
 MonoBehaviour:
@@ -1000,8 +1021,8 @@ MonoBehaviour:
   path:
   - Floats
   isSettingEnabled: 1
-  isPathLocked: 1
-  changingObjects: []
+  otherObjectChangingWithParameter: []
+  subscribers: []
   value: -0.04
 --- !u!114 &1243730248
 MonoBehaviour:
@@ -1022,9 +1043,8 @@ MonoBehaviour:
   - Iportant
   - Gameplay
   isSettingEnabled: 1
-  isPathLocked: 1
-  changingObjects:
-  - {fileID: 1243730248}
+  otherObjectChangingWithParameter: []
+  subscribers: []
   value: 27
 --- !u!1 &1260931903
 GameObject:
@@ -1074,9 +1094,8 @@ MonoBehaviour:
   path:
   - Some Path
   isSettingEnabled: 1
-  isPathLocked: 0
-  changingObjects:
-  - {fileID: 1260931906}
+  otherObjectChangingWithParameter: []
+  subscribers: []
   value: {x: 0, y: 0, z: 0}
 --- !u!1 &1293731519
 GameObject:
@@ -1175,9 +1194,8 @@ MonoBehaviour:
     value: 
   path: []
   isSettingEnabled: 1
-  isPathLocked: 0
-  changingObjects:
-  - {fileID: 1344150982}
+  otherObjectChangingWithParameter: []
+  subscribers: []
   value: 0
 --- !u!1 &1639517574
 GameObject:
@@ -1228,9 +1246,8 @@ MonoBehaviour:
   - Some Path
   - One
   isSettingEnabled: 1
-  isPathLocked: 0
-  changingObjects:
-  - {fileID: 1639517576}
+  otherObjectChangingWithParameter: []
+  subscribers: []
   value: 0
 --- !u!1 &1833573071
 GameObject:
@@ -1280,9 +1297,8 @@ MonoBehaviour:
   path:
   - Some Path
   isSettingEnabled: 1
-  isPathLocked: 0
-  changingObjects:
-  - {fileID: 1833573073}
+  otherObjectChangingWithParameter: []
+  subscribers: []
 --- !u!1 &1909182311
 GameObject:
   m_ObjectHideFlags: 0
@@ -1382,9 +1398,8 @@ MonoBehaviour:
   - Some Path
   - One
   isSettingEnabled: 1
-  isPathLocked: 0
-  changingObjects:
-  - {fileID: 1909345333}
+  otherObjectChangingWithParameter: []
+  subscribers: []
   value: 0
 --- !u!1 &1911584237
 GameObject:
@@ -1506,6 +1521,7 @@ MonoBehaviour:
   selectedStates:
   - {fileID: 316311670}
   - {fileID: 995060529}
+  - {fileID: 501506436}
   defaultStates:
   - {fileID: 316311670}
   - {fileID: 995060529}

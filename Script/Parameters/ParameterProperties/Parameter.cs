@@ -24,10 +24,11 @@ public abstract class Parameter<TComponent> : Parameter where TComponent : Param
         set
         {
             if (parameterComponent == value) return;
-            parameterComponent.UnSubscribe(this);
-
+            if(parameterComponent != null)
+                parameterComponent.UnSubscribe(this); 
             parameterComponent = (TComponent)value;
-            parameterComponent.Subscribe(this);
+            if(parameterComponent != null)
+                parameterComponent.Subscribe(this);
             OnParameterComponentChanged();
         }
     }
