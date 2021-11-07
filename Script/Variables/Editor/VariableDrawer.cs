@@ -9,12 +9,12 @@ using Object = UnityEngine.Object;
 
 namespace PlayBox
 {
-[CustomPropertyDrawer(typeof(Parameter), useForChildren: true)]
-public class ParameterDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(Variable), useForChildren: true)]
+public class VariableDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        var parameter = (Parameter)property.GetObjectOfProperty();
+        var variable = (Variable)property.GetObjectOfProperty();
         Object serializedObject = property.serializedObject.targetObject;
 
         Rect fullValuePos = position;
@@ -33,7 +33,7 @@ public class ParameterDrawer : PropertyDrawer
         
         if (serializedObject is Component component)
         {
-            if (TryGetLocalAttribute(property, out LocalParameterAttribute localAttribute))
+            if (TryGetLocalAttribute(property, out LocalVariableAttribute localAttribute))
             {
                 gameObject = component.gameObject;
                 isLocal = true;
@@ -44,7 +44,7 @@ public class ParameterDrawer : PropertyDrawer
         else
         {
             GUIContent error = EditorGUIUtility.IconContent("console.warnicon");
-            error.text = "Can't Reference Parameter from ScriptableObject";
+            error.text = "Can't Reference Variable from ScriptableObject";
             GUI.Label(dropdownFieldPos,error);
             return;
         }
@@ -59,47 +59,47 @@ public class ParameterDrawer : PropertyDrawer
             dropdownFieldPos.x = objectFieldPos.xMax + space;
             dropdownFieldPos.width = fullValuePos.width - objectFieldPos.width - space;
             
-            var newParam = (Parameter)
-                EditorGUI.ObjectField(objectFieldPos, GUIContent.none, parameter, type, allowSceneObjects: true);
-            TryChange(property, newParam, parameter, serializedObject);
-            if (parameter != null)
-                gameObject = parameter.gameObject;
+            var newParam = (Variable)
+                EditorGUI.ObjectField(objectFieldPos, GUIContent.none, variable, type, allowSceneObjects: true);
+            TryChange(property, newParam, variable, serializedObject);
+            if (variable != null)
+                gameObject = variable.gameObject;
         }
  
         // Draw Dropdown
         GUI.enabled = gameObject != null;
 
-        List<Parameter> parameters = gameObject == null
-            ? new List<Parameter>()
-            : gameObject.GetComponents(type).Cast<Parameter>().ToList();
+        List<Variable> variables = gameObject == null
+            ? new List<Variable>()
+            : gameObject.GetComponents(type).Cast<Variable>().ToList();
         
-        int index = parameters.IndexOf(parameter) + 1; 
+        int index = variables.IndexOf(variable) + 1; 
         bool createNewOption = isLocal && index == 0;
         
-        var selectables = new string[parameters.Count + (createNewOption ? 2 : 1)];
+        var selectables = new string[variables.Count + (createNewOption ? 2 : 1)];
         selectables[0] = "None";
         if (createNewOption)
             selectables[selectables.Length-1] = "[ Create New ]";
 
-        for (var i = 0; i < parameters.Count; i++)
-            selectables[i + 1] = parameters[i].PathString;
+        for (var i = 0; i < variables.Count; i++)
+            selectables[i + 1] = variables[i].PathString;
 
         int newIndex = EditorGUI.Popup(dropdownFieldPos, index, selectables);
         if (newIndex == index) return;
         if (newIndex <= 0)
-            TryChange(property, newParam: null, parameter, serializedObject);
-        else if (newIndex > parameters.Count)
+            TryChange(property, newParam: null, variable, serializedObject);
+        else if (newIndex > variables.Count)
         {
-            var newParameter = (Parameter)gameObject.AddComponent(type);
-            newParameter.PathString = defaultName;
-            TryChange(property, newParameter, parameter, serializedObject);
+            var newVariable = (Variable)gameObject.AddComponent(type);
+            newVariable.PathString = defaultName;
+            TryChange(property, newVariable, variable, serializedObject);
         }else
-            TryChange(property, parameters[newIndex - 1], parameter, serializedObject);
+            TryChange(property, variables[newIndex - 1], variable, serializedObject);
     }
 
 
 
-    public static bool TryGetLocalAttribute(SerializedProperty prop, out LocalParameterAttribute localAttribute)
+    public static bool TryGetLocalAttribute(SerializedProperty prop, out LocalVariableAttribute localAttribute)
     {
         localAttribute = null;
         if (prop == null) return false; 
@@ -118,24 +118,25 @@ public class ParameterDrawer : PropertyDrawer
         if (p == null) return false;
 
         var attributes = 
-            p.GetCustomAttributes(typeof(LocalParameterAttribute), inherit: false) as LocalParameterAttribute[];
+            p.GetCustomAttributes(typeof(LocalVariableAttribute), inherit: false) as LocalVariableAttribute[];
 
         if (attributes.Length == 0) return false;
         localAttribute = attributes[0];
         return true;
     }
 
-    static void TryChange(SerializedProperty property, Parameter newParam, Parameter parameter,
+    static void TryChange(SerializedProperty property, Variable newParam, Variable variable,
         Object serializedObject)
     {
-        if (newParam != parameter)
+        if (newParam != variable)
         {
-            Undo.RecordObject(serializedObject, "Parameter Changed");
+            Undo.RecordObject(serializedObject, "Variable Changed");
             property.objectReferenceValue = newParam;
             property.serializedObject.ApplyModifiedProperties();
         }
     }
 
+    /*
     public static Type GetType(SerializedProperty property)
     {
         Type parentType = property.serializedObject.targetObject.GetType();
@@ -143,35 +144,18 @@ public class ParameterDrawer : PropertyDrawer
         FieldInfo fi = parentType.GetField(property.propertyPath, binding);
         return fi.FieldType;
     }
+    */
     
-
-    public static bool DropdownButton(int id, Rect position, GUIContent content)
+    static Type GetType(SerializedProperty property)
     {
-        Event current = Event.current;
-        switch (current.type)
-        {
-            case EventType.MouseDown:
-                if (position.Contains(current.mousePosition) && current.button == 0)
-                {
-                    Event.current.Use();
-                    return true;
-                }
-
-                break;
-            case EventType.KeyDown:
-                if (GUIUtility.keyboardControl == id && current.character == '\n')
-                {
-                    Event.current.Use();
-                    return true;
-                }
-
-                break;
-            case EventType.Repaint:
-                EditorStyles.popup.Draw(position, content, id, false);
-                break;
-        }
-
-        return false;
-    } 
+        const BindingFlags binding = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+        string[] path = property.propertyPath.Split('.');
+        Type fieldType = property.serializedObject.GetTargetType();
+        for (var i = 0; i < path.Length; i++)
+            fieldType = fieldType.GetField(path[i], binding).FieldType;
+ 
+        return fieldType;  
+    }
+    
 }
 }

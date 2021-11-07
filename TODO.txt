@@ -1,26 +1,59 @@
-Csütörtök:   Parameter & Trigger System
-    ---- Component as parameters or events ----
-    ---- Window for parameters or events ----
-    ---- Scrollable Window ----
-    ---- Closable No Category Group ----
-    ---- Multi Level Categories ----
-    ---- Selecting Objects on Window ----
-    ---- Join: Categories & Name => Path ----
-    ---- Fix Error: The same field name is serialized multiple times in the class or its parent class ----
-    ---- ScriptableObjects as parameters or events ---
-    ---- Finding Global Parameters ---
-    ---- Remove Global Parameters ---
-    ---- Properties For Parameters ---
-    ---- Parameter Component Drawer (Minimal) ---
-            
-    Filters for the window
-        GameObject
-        Name
-        Category
-        Type
+Parameter & Trigger System
+    --- Component as parameters or events ----
+    --- Window for parameters or events ----
+    --- Scrollable Window ----
+    --- Closable No Category Group ----
+    --- Multi Level Categories ----
+    --- Selecting Objects on Window ----
+    --- Join: Categories & Name => Path ----
+    --- Fix Error: The same field name is serialized multiple times in the class or its parent class ----
+    --- ScriptableObjects as parameters or events ---
+    --- Finding Global Parameters ---
+    --- Remove Global Parameters ---
+    --- Properties For Parameters ---
+    --- Parameter Component Drawer (Minimal) ---
+    --- Standardize Parameter Drawing ---   
+    --- Add Last Triggered to Trigger ---   
+    --- Collider Parameters (enter, trigger...) ---
+    --- Show On Dashboard Toggle ---
+    --- Optimize Reflection operations ---
     
+    Source Functions (From Other Variables)
+        Egy mód arra, hogy több Variable-ből álljon össze egy. Pl. Add, Multiply, And, Or Contains
+        Draw parameters fo Function VariableComponentEditor
+
+    Source Property of Function (From Component)    
+        Mód arra, hogy a Variable értéke egy azonos Objektumon lévő komponensből származzon.
+            (Setter esetén be is állítsa azt)
+    
+    Output Functions (To Component)        
+        Mód arra, hogy a Variable értékének változásakor lefusson egy függvény egy azonos Objektumon lévő komponensen.
+        
+    Event Parameters
+    Event Flow
+    Circle Check
+    
+    Higher Variable Heights & Complex Variable                 
+    UI Elements Parameters
+    
+    Sources Functions
+        Transform
+        Collider
+        Animator
+        Rigidbody
+    Filters for the Window
+        GameObject
+        Path
+        Type
+            
+ 
     Fix Enum Select:
-        Parameter Filter SelectBug 
+        Parameter Filter SelectBug
+
+Operations
+    Bool
+    Events
+    Trigger
 
 Péntek:
     State Transition:

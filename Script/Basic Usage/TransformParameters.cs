@@ -3,26 +3,29 @@ using PlayBox;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class PositionParameter : MonoBehaviour
+public class TransformParameters : MonoBehaviour
 {
-    [LocalParameter, SerializeField] Vector3Parameter position; 
-    [LocalParameter, SerializeField] Vector3Parameter localPosition;
+    [LocalVariable, SerializeField] Vector3Variable position; 
+    [LocalVariable, SerializeField] Vector3Variable localPosition; 
+    [LocalVariable, SerializeField] Vector3Variable velocity;
+
+    Vector3 _lastPos = new Vector3();
 
     void OnValidate() => Setup();
 
     void Awake() => Setup();
 
-    public void Setup()
+    void Setup()
     {
         if (position != null)
         { 
-            position.otherObjectChangingWithParameter = new List<Object> { transform};
+            position.otherObjectChangingWithVariable = new List<Object> { transform};
             position.valueChanged -= OnPositionChanged;
             position.valueChanged += OnPositionChanged;
         } 
         if (localPosition != null)
         {
-            localPosition.otherObjectChangingWithParameter = new List<Object> { transform};
+            localPosition.otherObjectChangingWithVariable = new List<Object> { transform};
             localPosition.valueChanged -= OnLocalPositionChanged;
             localPosition.valueChanged += OnLocalPositionChanged;
         }
@@ -40,18 +43,24 @@ public class PositionParameter : MonoBehaviour
     
     public void Update()
     {
+        Vector3 pos = transform.position;
         if (position != null)
-        {
-            Vector3 pos = transform.position;
+        { 
             if (pos != position.Value)
                 position.Value = pos;
         }
 
         if (localPosition != null)
         {
-            Vector3 pos = transform.localPosition;
-            if (pos != localPosition.Value)
-                localPosition.Value = pos;
+            Vector3 localPos = transform.localPosition;
+            if (localPos != localPosition.Value)
+                localPosition.Value = localPos;
         }
+
+        Vector3 movement = pos - _lastPos;
+        _lastPos = pos;
+        
+        if (velocity != null)
+            velocity.Value = movement / Time.deltaTime; 
     } 
 }

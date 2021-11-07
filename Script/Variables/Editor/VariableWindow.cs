@@ -6,11 +6,12 @@ using MUtility;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
+using System.Reflection;
 using Object = UnityEngine.Object;
 
 namespace PlayBox
 {
-public class ParameterWindow : EditorWindow
+public class VariableWindow : EditorWindow
 {
     static float _lineH;
     static float _space;
@@ -19,12 +20,14 @@ public class ParameterWindow : EditorWindow
     [SerializeField] List<string> openedElements = new List<string>();
 
     [SerializeField] Vector2 scrollPosition;
-    const string editorPrefsKey = "Parameter Window Info";
+    const string editorPrefsKey = "Variable Window Info";
+    const string windowName = "Variable Dashboard";
+    const string menuItemName = "Tools/" + windowName;
 
     static GUIStyle _labelStyle;
-    public static GUIStyle LabelStyle =>
-        _labelStyle = _labelStyle ?? new GUIStyle(GUI.skin.label){fontSize = 10, alignment = TextAnchor.MiddleLeft};   
-    
+    public static GUIStyle LabelStyle => _labelStyle ??
+        (_labelStyle = new GUIStyle(GUI.skin.label) { fontSize = 10, alignment = TextAnchor.MiddleLeft });
+
     public void OnEnable()
     {
         Undo.undoRedoPerformed += Repaint;
@@ -41,11 +44,11 @@ public class ParameterWindow : EditorWindow
         EditorPrefs.SetString(editorPrefsKey, data);
     }
 
-    [MenuItem("Tools/Parameter Dashboard")]
+    [MenuItem(menuItemName)]
     static void ShowWindow()
     {
-        var window = GetWindow<ParameterWindow>();
-        window.titleContent = new GUIContent("Parameter Dashboard");
+        var window = GetWindow<VariableWindow>();
+        window.titleContent = new GUIContent(windowName);
         window.Show();
         window.openedElements = new List<string>();
     }
@@ -55,20 +58,20 @@ public class ParameterWindow : EditorWindow
     {
         _lineH = EditorGUIUtility.singleLineHeight;
         _space = EditorGUIUtility.standardVerticalSpacing;
-        ParameterTree parameterTree = ParameterHelper.GetSceneParameterTree();
+        VariableTree variableTree = VariableHelper.GetVariableTree();
         scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
         _lineCount = 0;
         EditorGUI.indentLevel = -1;
-        DrawTree(parameterTree, openedElements);
+        DrawTree(variableTree, openedElements);
 
         EditorGUILayout.EndScrollView();
     }
 
 
-    static void DrawTree(ParameterTree tree, List<string> openedElements)
+    static void DrawTree(VariableTree tree, List<string> openedElements)
     { 
-        List<string> categories = tree.Categories().Reverse().ToList();
+        List<string> categories = tree.Path().Reverse().ToList();
         bool emptyCategory = categories.Count == 1 && categories.First() == string.Empty;
         string categoryText = emptyCategory ? string.Empty : string.Join(" / ", categories);
         var open = true;
@@ -77,12 +80,12 @@ public class ParameterWindow : EditorWindow
         if (!emptyCategory)
         {
             open = openedElements.Contains(categoryText);
-            openable = !tree.childCategories.IsNullOrEmpty() || tree.parameters.Count > 1;
+            openable = !tree.children.IsNullOrEmpty() || tree.variables.Count > 1;
             pos = EditorGUILayout.GetControlRect(true, _lineH);
 
             if (openable)
             {
-                bool isSelected = tree.parameters.Count == 1 && Selection.Contains(tree.parameters[0].gameObject);
+                bool isSelected = tree.variables.Count == 1 && Selection.Contains(tree.variables[0].gameObject);
                 DrawRowColor(pos, isSelected);
                 bool newOpen = EditorGUI.Foldout(pos, open, GUIContent.none);
                 EditorGUI.indentLevel++;
@@ -104,22 +107,22 @@ public class ParameterWindow : EditorWindow
 
         if (!emptyCategory)
         {
-            if (tree.parameters.Count == 1)
+            if (tree.variables.Count == 1)
             {
                 GUIContent content =
-                    openable ? GUIContent.none : new GUIContent(tree.parameters[0].Path.LastOrDefault());
-                DrawParameter(pos, tree.parameters[0], content);
+                    openable ? GUIContent.none : new GUIContent(tree.variables[0].Path.LastOrDefault());
+                DrawVariable(pos, tree.variables[0], content);
             }
 
             else if (open)
             {
                 EditorGUI.indentLevel++;
-                foreach (Parameter parameter in tree.parameters)
+                foreach (Variable variable in tree.variables)
                 {
-                    Rect parameterPos = EditorGUILayout.GetControlRect(hasLabel: true, _lineH);
+                    Rect variablePos = EditorGUILayout.GetControlRect(hasLabel: true, _lineH);
                     GUIContent content = EditorGUIUtility.IconContent("GameObject Icon");
-                    content.text = parameter.gameObject.name;
-                    DrawParameter(parameterPos, parameter, content, isGameObject: true);
+                    content.text = variable.gameObject.name;
+                    DrawVariable(variablePos, variable, content, isGameObject: true);
                 }
 
                 EditorGUI.indentLevel--;
@@ -133,7 +136,7 @@ public class ParameterWindow : EditorWindow
         }
 
 
-        foreach (KeyValuePair<string, ParameterTree> child in tree.childCategories)
+        foreach (KeyValuePair<string, VariableTree> child in tree.children)
         {
             EditorGUI.indentLevel++;
             DrawTree(child.Value, openedElements);
@@ -144,13 +147,13 @@ public class ParameterWindow : EditorWindow
 
     const float invisibleLabelWidth = 25;
 
-    static void DrawParameter(Rect position, Parameter parameter, GUIContent name, bool isGameObject = false)
+    static void DrawVariable(Rect position, Variable variable, GUIContent name, bool isGameObject = false)
     { 
         EditorGUI.indentLevel++;
         float valueWidth =  2f * position.width / 5f;
         EditorGUIUtility.labelWidth = invisibleLabelWidth;  
  
-        Object obj = parameter.gameObject;
+        Object obj = variable.gameObject;
         
         bool selected = Selection.Contains(obj);
         if (name != GUIContent.none)
@@ -166,7 +169,7 @@ public class ParameterWindow : EditorWindow
                 EditorGUI.LabelField(position, name);
         }
 
-        DrawProperty(position, valueWidth, parameter);
+        DrawVariableValue(position, valueWidth, variable);
         
         GUI.enabled = true;
         position.width -= valueWidth;
@@ -203,7 +206,7 @@ public class ParameterWindow : EditorWindow
         _lineCount++;
     }
 
-    static void DrawProperty(Rect position, float valueWidth, Parameter parameter)
+    static void DrawVariableValue(Rect position, float valueWidth, Variable variable)
     {
         var fullValuePos = new Rect(
             position.xMax - (invisibleLabelWidth + valueWidth + 2),
@@ -212,53 +215,57 @@ public class ParameterWindow : EditorWindow
             position.height);
 
         var valuePos = new Rect(position.xMax - valueWidth, position.y, valueWidth, position.height); 
-        var recordText = $"Parameter Value Changed: {parameter.PathString} / {parameter.name}";
+        var recordText = $"Variable Value Changed: {variable.PathString} / {variable.name}";
 
         EditorGUI.BeginChangeCheck();
-        Undo.RecordObjects(parameter.ChangingObjects.ToArray(), recordText);
+        Undo.RecordObjects(variable.ChangingObjects.ToArray(), recordText);
 
-        GUI.enabled = parameter.isSettingEnabled;
+        GUI.enabled = variable.isGUISettingEnabled;
         int indent = EditorGUI.indentLevel;
         EditorGUI.indentLevel = 0;
         
-        switch (parameter)
+        var serializedObject = new SerializedObject(variable);
+        var valueProperty = serializedObject.FindProperty("value");
+
+        if (valueProperty != null)
+        { 
+            // Value Type
+            if( variable is FloatVariable || variable is IntVariable)  
+                EditorGUI.PropertyField(fullValuePos,  valueProperty, new GUIContent(" "));
+            else 
+                EditorGUI.PropertyField(valuePos, valueProperty, GUIContent.none);
+             
+            PropertyInfo valuePropertyInfo = variable.GetType().GetProperty("Value");
+            valuePropertyInfo.SetValue(variable, valueProperty.GetPropertyValue());
+
+            serializedObject.ApplyModifiedProperties();
+        }
+        else
         {
-            case BoolParameter boolComponent: 
-                boolComponent.Value = EditorGUI.Toggle(valuePos, boolComponent.Value);
-                break;
-            case FloatParameter floatComponent: 
-                floatComponent.Value = EditorGUI.FloatField(fullValuePos, " ", floatComponent.Value);
-                break;
-            case IntParameter intComponent: 
-                intComponent.Value = EditorGUI.IntField(fullValuePos, " ", intComponent.Value);
-                break;
-            case StringParameter stringComponent: 
-                stringComponent.Value = EditorGUI.TextField(valuePos, stringComponent.Value);
-                break;
-            case Vector2Parameter vector2Component:
-                fullValuePos.y -= _lineH + _space; // HACK 
-                vector2Component.Value = EditorGUI.Vector2Field(valuePos, GUIContent.none, vector2Component.Value);
-                break;
-            case Vector3Parameter vector3Component:
-                fullValuePos.y -= _lineH + _space; // HACK 
-                vector3Component.Value = EditorGUI.Vector3Field(valuePos, GUIContent.none, vector3Component.Value);
-                break;
-            case TriggerParameter triggerComponent: 
-                if (GUI.Button(valuePos, "Trigger"))
-                    triggerComponent.OnTriggered();
-                break;
-            default:
+            // Event Type
+            if (variable is EventVariable eventVariable)
+            {
+                MethodInfo invokeMethod = eventVariable.GetType().GetMethod("InvokeEvent");
+                if (invokeMethod != null)
+                {
+                    if (GUI.Button(valuePos, eventVariable.ToString()))
+                        invokeMethod.Invoke(variable, new object[0]);
+                }
+            }
+            else
+            {
+                // Not Supported Type!
                 GUI.color = EditorHelper.ErrorRedColor;
                 GUIContent errorContent = EditorGUIUtility.IconContent("Error");
-                errorContent.text = "Not Supported Type !";
+                errorContent.text = "Not Supported Type!";
                 GUI.Label(valuePos, errorContent);
                 GUI.color = Color.white;
-                break;
-        }
+            }
+        } 
 
         if (EditorGUI.EndChangeCheck())
         {
-            foreach (Object dirty in parameter.ChangingObjects)
+            foreach (Object dirty in variable.ChangingObjects)
             {
                 if (!(dirty is ScriptableObject)) continue; 
                 EditorUtility.SetDirty(dirty);
@@ -266,6 +273,7 @@ public class ParameterWindow : EditorWindow
 
             focusedWindow.Repaint();
         }
+        
         EditorGUI.indentLevel = indent;
     }
 }
