@@ -1024,14 +1024,14 @@ MonoBehaviour:
   myStruct:
     myInt: 0
     myString: 
-  boolVariable: {fileID: 0}
+  boolVariable: {fileID: 1243730251}
   intVariable: {fileID: 0}
   floatVariable: {fileID: 0}
   stringVariable: {fileID: 0}
   v2Variable: {fileID: 0}
   v3Variable: {fileID: 0}
   eventVariable: {fileID: 0}
-  animationCurveVariable: {fileID: 0}
+  animationCurveVariable: {fileID: 1243730248}
   directionVariable: {fileID: 0}
   dateTimeVariable: {fileID: 0}
   testSearchEnum: 301

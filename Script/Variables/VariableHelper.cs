@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using MarosiUtility;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -26,28 +27,14 @@ static class VariableHelper
         if(_functions!=null) return;
         DateTime start =DateTime.Now;
 
-        int methodsFound = 0;
+        var methodsFound = 0;
         _functions = new Dictionary<Type, Dictionary<string, MethodInfo>>();
-        var currentAssembly = Assembly.GetExecutingAssembly();
-        string currentAssemblyFullName = currentAssembly.FullName;
-        const string globalAssembly = "Assembly-CSharp";
         const BindingFlags binding = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy |
                                      BindingFlags.Static | BindingFlags.Instance;
         
-        foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+        foreach (Assembly assembly in ReflectionHelper.FindRelevantAssemblies())
         {
             DateTime startAssembly =DateTime.Now;
-            string assemblyName = assembly.GetName().Name;
-            bool isCurrent = assembly == currentAssembly; 
-            bool isGlobal = assemblyName == globalAssembly;
-            AssemblyName[] referencedAssemblies = assembly.GetReferencedAssemblies();
-            bool isReferencingCurrent =
-                referencedAssemblies.Select(an => an.FullName).Contains(currentAssemblyFullName);
-            
-            if (!isCurrent && !isGlobal && !isReferencingCurrent)
-                continue; 
-            
-            
             foreach (Type type in assembly.GetTypes()) foreach (MethodInfo method in type.GetMethods(binding))
             {
                 var attribute = method.GetCustomAttribute<PlayBoxFunctionAttribute>();
