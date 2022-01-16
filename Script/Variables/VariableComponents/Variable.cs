@@ -70,7 +70,7 @@ namespace PlayBox
         static string GetCategoriesStringCategories(IEnumerable<string> categories) =>
             string.Join(" / ", categories);
         
-        protected override string Text(Variable parentObject, string originalLabel) => "Path";
+        protected override string GetLabel(Variable parentObject, string originalLabel) => "Path";
     }
 
     internal abstract Type ValueType { get; }
