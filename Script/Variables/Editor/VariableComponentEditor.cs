@@ -33,43 +33,73 @@ public class VariableComponentEditor : Editor
     { 
         var variable = target as Variable;
         float space = EditorGUIUtility.standardVerticalSpacing;
-        const float toggleWidth = 16;
+        const float visibilityWidth = 50;
 
-        Rect fullRect = EditorGUILayout.GetControlRect(hasLabel: true, height: 16f, EditorStyles.layerMaskField);
+        Rect fullRect = EditorGUILayout.GetControlRect(hasLabel: true, height: 16f);
         fullRect.height += 2;
+        fullRect.width += fullRect.x - (space * 3);
+        fullRect.x = space * 2;
         
         Rect showToggleRect = fullRect;
-        showToggleRect.width = toggleWidth;
-        showToggleRect.x = space * 2;
+        showToggleRect.width = visibilityWidth;
         
         Rect labelRect = fullRect;
         labelRect.x = showToggleRect.xMax + space;
-        labelRect.width = EditorHelper.LabelWidth - space * 2;
+        labelRect.width = EditorHelper.LabelWidth;
         
         Rect valueRect = fullRect;
-        valueRect.width = fullRect.width - EditorHelper.LabelWidth;
-        valueRect.x = labelRect.xMax;
-        labelRect.width -= 4;
+        valueRect.width = fullRect.width - EditorHelper.LabelWidth - visibilityWidth;
+        valueRect.x = labelRect.xMax + space;
         
 
         Undo.RecordObjects(variable.ChangingObjects.ToArray(), "Component Value Changed");
 
-        // Show On Dashboard
+        // Visibility
         string path = variable.PathString;
         bool hasPath = !string.IsNullOrEmpty(path);
+        var content = new GUIContent(
+            variable.visibility.ToString(),
+            null,
+            $"{variable.visibility} Visibility");
         GUI.enabled = hasPath;
-        bool show =
-            EditorGUI.Toggle(showToggleRect, variable.showOnDashboard && hasPath);
+        var visibility = (Variable.Visibility)EditorGUI.EnumPopup(
+            showToggleRect,
+            variable.visibility);
+        GUI.Button(showToggleRect, content);
         if (hasPath)
-            variable.showOnDashboard = show;
+            variable.visibility = visibility;
         GUI.enabled = true ;
-        var tooltipContent = new GUIContent("", null, "Show on Dashboard");
-        GUI.Label(showToggleRect, tooltipContent);
         
         // Label
         variable.PathString = EditorGUI.TextField(labelRect, path);
         
-        // Foldout
+
+        
+        // Value
+        GUI.color = Color.white;
+        GUI.enabled = variable.isGUISettingEnabled;
+        if (_valueProperty != null)
+        {
+            EditorGUI.PropertyField(valueRect, _valueProperty, GUIContent.none);
+            _valuePropertyInfo.SetValue(variable, _valueProperty.GetPropertyValue());
+        }
+        else if (_eventInvokeMethod != null)
+        { 
+            if (GUI.Button(valueRect,  ((EventVariable) variable).ToString()))
+                _eventInvokeMethod.Invoke(variable, new object[0]);
+        }
+        else
+        {
+            GUI.color = EditorHelper.ErrorRedColor;
+            GUIContent errorContent = EditorGUIUtility.IconContent("Error");
+            errorContent.text = "Not Supported Type!";
+            GUI.Label(valueRect, errorContent);
+            GUI.color = Color.white;
+        }
+        
+        /*
+        // TODO
+        // Source 
         bool hasFunctionText = !string.IsNullOrEmpty(variable.FunctionUniqName);
         bool hasAvailableFunctions = variable.AvailableFunctions != null && variable.AvailableFunctions.Any(); 
         if (hasFunctionText || hasAvailableFunctions)
@@ -98,30 +128,9 @@ public class VariableComponentEditor : Editor
             valueRect.width -= space + w;
         }
         
-        GUI.color = Color.white;
-        // Value
-        GUI.enabled = variable.isGUISettingEnabled;
-        if (_valueProperty != null)
-        {
-            EditorGUI.PropertyField(valueRect, _valueProperty, GUIContent.none);
-            _valuePropertyInfo.SetValue(variable, _valueProperty.GetPropertyValue());
-        }
-        else if (_eventInvokeMethod != null)
-        { 
-            if (GUI.Button(valueRect,  ((EventVariable) variable).ToString()))
-                _eventInvokeMethod.Invoke(variable, new object[0]);
-        }
-        else
-        {
-            GUI.color = EditorHelper.ErrorRedColor;
-            GUIContent errorContent = EditorGUIUtility.IconContent("Error");
-            errorContent.text = "Not Supported Type!";
-            GUI.Label(valueRect, errorContent);
-            GUI.color = Color.white;
-        }
-
-        if (_isOpen)
+         if (_isOpen)
             DrawFunction(variable);
+         */
 
         GUI.enabled = true;
     }
@@ -177,7 +186,9 @@ public class VariableComponentEditor : Editor
                 variable.SourceFunction = null;
         }
         
-        DrawFunctionParameters(variable, variable.SourceFunction);
+        
+        // TODO
+        // DrawFunctionParameters(variable, variable.SourceFunction);
     }
  
     // TODO

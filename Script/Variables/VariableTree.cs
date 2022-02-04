@@ -1,11 +1,17 @@
 ﻿using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PlayBox
 {
 class VariableTree
-{ 
-    
+{
+    public enum DrawingType
+    {
+        Window,
+        MonoBehaviour,
+    }
+
     public string node;
     public VariableTree parent;
     public SortedDictionary<string, VariableTree> children;
@@ -17,7 +23,7 @@ class VariableTree
         variables = new List<Variable>();
         parent = null;
         node = string.Empty;
-        
+
         foreach (Variable param in allParams)
         {
             IEnumerable<string> paramCategories = param.Path;
@@ -29,6 +35,7 @@ class VariableTree
 
         SortVariablesRecursively();
     }
+
     VariableTree(string node, VariableTree parent)
     {
         this.node = node;
@@ -40,15 +47,13 @@ class VariableTree
     void SortVariablesRecursively()
     {
         variables.Sort(VariableSorting);
-        if(children == null) return;
+        if (children == null) return;
         foreach (KeyValuePair<string, VariableTree> nodes in children)
             nodes.Value.SortVariablesRecursively();
     }
 
-    int VariableSorting(Variable x, Variable y) => 
+    int VariableSorting(Variable x, Variable y) =>
         string.Compare(x.name, y.name, StringComparison.Ordinal);
-    
-
 
     VariableTree GetChild(string category)
     {
@@ -60,6 +65,23 @@ class VariableTree
         var child = new VariableTree(category, this);
         children.Add(category, child);
         return child;
+    }
+
+    public bool IsRoot
+    {
+        get
+        {
+            List<string> categories = Path().ToList();
+            return categories.Count == 1 && categories.Last() == string.Empty;
+        }
+    }
+
+    public string CategoryText {
+        get
+        {
+            List<string> categories = Path().Reverse().ToList();
+            return IsRoot ? string.Empty : string.Join(" / ", categories);
+        }
     }
 
     public IEnumerable<string> Path()

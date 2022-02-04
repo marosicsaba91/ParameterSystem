@@ -28,6 +28,6 @@ public class VariableTester : MonoBehaviour
 
     void OnEnable()
     {
-        throw new NotImplementedException();
+        
     }
 }

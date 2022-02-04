@@ -135,16 +135,6 @@ public class VariableDrawer : PropertyDrawer
             property.serializedObject.ApplyModifiedProperties();
         }
     }
-
-    /*
-    public static Type GetType(SerializedProperty property)
-    {
-        Type parentType = property.serializedObject.targetObject.GetType();
-        const BindingFlags binding = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-        FieldInfo fi = parentType.GetField(property.propertyPath, binding);
-        return fi.FieldType;
-    }
-    */
     
     static Type GetType(SerializedProperty property)
     {

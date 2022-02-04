@@ -8,14 +8,16 @@ using Object = UnityEngine.Object;
 
 namespace PlayBox
 {
-    public abstract class Variable : MonoBehaviour
+public abstract class Variable : MonoBehaviour
 {
+    public enum Visibility { Object, Parent, Global }
+
     [FormerlySerializedAs("path")] [SerializeField] PathProperty pathString = new PathProperty(); 
     [FormerlySerializedAs("pathStrings")] [SerializeField, HideInInspector] string[] path = Array.Empty<string>();
     [SerializeField] public bool isGUISettingEnabled = true;
     [SerializeField] public List<Object> otherObjectChangingWithVariable;
-    [SerializeField] public bool showOnDashboard = true;
- 
+    [SerializeField] public Visibility visibility = Visibility.Parent;
+    
     /// <summary>
     /// Return the UnityEngine.Objects that can be changed by Changing the value of this Variable
     /// For Undo And Redo

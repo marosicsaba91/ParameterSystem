@@ -3,14 +3,61 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using MarosiUtility;
+using UnityEditor;
+#if UNITY_EDITOR
 using UnityEngine;
+#endif
 using Object = UnityEngine.Object;
 
 namespace PlayBox
 {
 static class VariableHelper
 {
-    
+    const string openedVariablesEditorPrefsKey = "Opened Variables";
+
+    class Savable : ScriptableObject
+    {
+        public List<string> openedVariables;
+
+        public Savable()
+        {
+            openedVariables = new List<string>();
+        }
+    }
+
+    static Savable _savable;
+
+    public static List<string> OpenedVariables
+    {
+        get
+        {
+#if UNITY_EDITOR
+            if (_savable == null)
+            {
+                _savable = ScriptableObject.CreateInstance<Savable>();
+                string data = EditorPrefs.GetString(
+                    openedVariablesEditorPrefsKey, JsonUtility.ToJson(_savable, prettyPrint: false));
+                JsonUtility.FromJsonOverwrite(data, _savable);
+            }
+#endif
+            if (_savable == null)
+                _savable = ScriptableObject.CreateInstance<Savable>();
+
+            return _savable.openedVariables;
+        }
+        set
+        {
+            if (_savable == null)
+                _savable = ScriptableObject.CreateInstance<Savable>();
+
+            _savable.openedVariables = value;
+
+            string data = JsonUtility.ToJson(_savable, prettyPrint: false);
+            EditorPrefs.SetString(openedVariablesEditorPrefsKey, data);
+        }
+    }
+
+
     static readonly bool debugLogs = false;
     static Dictionary<Type, Dictionary<string, MethodInfo>> _functions = null;
      
@@ -81,8 +128,8 @@ static class VariableHelper
 
     internal static IEnumerable<Variable> AllVariables() => 
         Object.FindObjectsOfType(typeof(Variable)).Cast<Variable>();
-    internal static IEnumerable<Variable> ShownVariables() => 
-        AllVariables().Where(variable => variable.showOnDashboard);
+    public static IEnumerable<Variable> AllGlobalVariables() => 
+        AllVariables().Where(variable => variable.visibility == Variable.Visibility.Global);
 
     static IEnumerable<Variable> AllVariables<TFilter>() where TFilter : Variable
     { 
@@ -110,8 +157,7 @@ static class VariableHelper
         return sorted;
     }
 
- 
-    public static VariableTree GetVariableTree() => new VariableTree(ShownVariables());
+  
 
     static int VariableSorting(Variable x, Variable y)
     {

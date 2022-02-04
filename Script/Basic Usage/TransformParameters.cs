@@ -19,13 +19,13 @@ public class TransformParameters : MonoBehaviour
     {
         if (position != null)
         { 
-            position.otherObjectChangingWithVariable = new List<Object> { transform};
+            position.otherObjectChangingWithVariable = new List<Object> { transform };
             position.valueChanged -= OnPositionChanged;
             position.valueChanged += OnPositionChanged;
         } 
         if (localPosition != null)
         {
-            localPosition.otherObjectChangingWithVariable = new List<Object> { transform};
+            localPosition.otherObjectChangingWithVariable = new List<Object> { transform };
             localPosition.valueChanged -= OnLocalPositionChanged;
             localPosition.valueChanged += OnLocalPositionChanged;
         }

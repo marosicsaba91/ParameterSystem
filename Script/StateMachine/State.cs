@@ -18,7 +18,6 @@ public class State : MonoBehaviour
 	[SerializeField] State parentStateMachine;
 	[SerializeField] StateEffect[] effects;
 	[SerializeField] StateTransition[] transitions;
-	 
 	
 	public delegate void StateEnterDelegate(State previousState);
 	public delegate void StateExitDelegate(State nextState);
