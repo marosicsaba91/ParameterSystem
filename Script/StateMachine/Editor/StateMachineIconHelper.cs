@@ -62,9 +62,9 @@ static class StateMachineIconHelper
         return new GUIContent(texture, tooltip);
     }
 
-    public static Color StateColor(this State state) => state.GetStateType().StateColor();
+    public static Color StateEditorColor(this State state) => state.GetStateType().StateEditorColor();
 
-    static Color StateColor(this StateType stateType)
+    static Color StateEditorColor(this StateType stateType)
     {
         switch (stateType)
         {

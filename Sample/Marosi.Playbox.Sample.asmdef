@@ -1,0 +1,16 @@
+{
+    "name": "PlayboxSample",
+    "references": [
+        "GUID:ec315ab766055dd469d5df8dc12e75b0",
+        "GUID:8c8c0e118c65fb143abfbcdb8ea42f51"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
