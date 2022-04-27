@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using MUtility;
+using MarosiUtility; 
 using UnityEditor; 
 using UnityEngine;
 
@@ -81,7 +81,7 @@ public class VariableComponentEditor : Editor
         if (_valueProperty != null)
         {
             EditorGUI.PropertyField(valueRect, _valueProperty, GUIContent.none);
-            _valuePropertyInfo.SetValue(variable, _valueProperty.GetObjectOfProperty());
+            _valuePropertyInfo.SetValue(variable, _valueProperty.GetPropertyValue());
         }
         else if (_eventInvokeMethod != null)
         { 
