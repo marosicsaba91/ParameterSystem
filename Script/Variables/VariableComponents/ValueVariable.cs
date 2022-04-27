@@ -19,7 +19,6 @@ public abstract class ValueVariable<T> : Variable
             if (functionParameters == null)
                 functionParameters = new List<Parameter>();
             return default;
-            // return (T)Function.Invoke(null, functionParameters.Cast<>().ToArray());
         }
         set
         {

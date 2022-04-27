@@ -5,6 +5,7 @@ using System.Linq;
 using MUtility;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace PlayBox
 {
@@ -35,8 +36,9 @@ public class StateTransitionEditor : Editor
 		EditorGUILayout.BeginHorizontal();
 		GUILayout.Label("Transition", GUILayout.Width(EditorHelper.LabelWidth - 4));
 		const float directionW = 40;
-		var w1 = (int) ((EditorHelper.ContentWidth - directionW - 6) / 2f);
-		float w2 = EditorHelper.ContentWidth - (2 * w1) - 6;
+		Rect full = EditorGUILayout.GetControlRect(true, 0);
+		int w1 = (int) ((EditorHelper.ContentWidth(full) - directionW - 6) / 2f);
+		float w2 = EditorHelper.ContentWidth(full)  - (2 * w1) - 6;
 		GUI.enabled = false;
 		GUILayout.Button("This State", GUILayout.Width(w1));
 		GUI.enabled = true;

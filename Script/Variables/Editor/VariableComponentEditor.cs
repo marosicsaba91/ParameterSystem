@@ -81,7 +81,7 @@ public class VariableComponentEditor : Editor
         if (_valueProperty != null)
         {
             EditorGUI.PropertyField(valueRect, _valueProperty, GUIContent.none);
-            _valuePropertyInfo.SetValue(variable, _valueProperty.GetPropertyValue());
+            _valuePropertyInfo.SetValue(variable, _valueProperty.GetObjectOfProperty());
         }
         else if (_eventInvokeMethod != null)
         { 

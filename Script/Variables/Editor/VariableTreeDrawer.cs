@@ -287,7 +287,7 @@ static class VariableTreeDrawer
                 EditorGUI.PropertyField(valuePos, valueProperty, GUIContent.none);
              
             PropertyInfo valuePropertyInfo = variable.GetType().GetProperty("Value");
-            valuePropertyInfo.SetValue(variable, valueProperty.GetPropertyValue());
+            valuePropertyInfo.SetValue(variable, valueProperty.GetObjectOfProperty());
 
             serializedObject.ApplyModifiedProperties();
         }
