@@ -7,7 +7,7 @@
   "type": "library",
   "hideInEditor": false,
   "dependencies": {
-    "com.marosi.utility": "1.2.2"
+    "com.marosi.utility": "1.2.6"
   },
   "author": {
     "name": "Csaba Marosi",

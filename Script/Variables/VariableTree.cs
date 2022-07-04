@@ -53,7 +53,7 @@ class VariableTree
     }
 
     int VariableSorting(Variable x, Variable y) =>
-        string.Compare(x.name, y.name, StringComparison.Ordinal);
+        string.Compare(x.NiceName, y.NiceName, StringComparison.Ordinal);
 
     VariableTree GetChild(string category)
     {

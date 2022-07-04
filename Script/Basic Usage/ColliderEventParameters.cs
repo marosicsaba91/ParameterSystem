@@ -9,10 +9,10 @@ public class ColliderEventParameters : MonoBehaviour
     [Serializable]
     struct ColliderEvents
     {
-        [LocalVariable] public EventVariable onCollisionEnter;
-        [LocalVariable] public EventVariable onCollisionExit;
-        [LocalVariable] public EventVariable onTriggerEnter;
-        [LocalVariable] public EventVariable onTriggerExit;
+        [Parameter] public EventVariable onCollisionEnter;
+        [Parameter] public EventVariable onCollisionExit;
+        [Parameter] public EventVariable onTriggerEnter;
+        [Parameter] public EventVariable onTriggerExit;
     }
 
     [FormerlySerializedAs("colliderTriggers")] [SerializeField] ColliderEvents colliderEvents;
@@ -20,10 +20,10 @@ public class ColliderEventParameters : MonoBehaviour
     [Serializable]
     struct Collider2DEvents
     {
-        [LocalVariable] public EventVariable onCollisionEnter2D;
-        [LocalVariable] public EventVariable onCollisionExit2D;
-        [LocalVariable] public EventVariable onTriggerEnter2D;
-        [LocalVariable] public EventVariable onTriggerExit2D;
+        [Parameter] public EventVariable onCollisionEnter2D;
+        [Parameter] public EventVariable onCollisionExit2D;
+        [Parameter] public EventVariable onTriggerEnter2D;
+        [Parameter] public EventVariable onTriggerExit2D;
     }
 
     [FormerlySerializedAs("collider2DTriggers")] [SerializeField] Collider2DEvents collider2DEvents;

@@ -4,16 +4,16 @@ using UnityEngine;
 namespace PlayBox
 {
 [AttributeUsage(AttributeTargets.Field)]
-public class LocalVariableAttribute : PropertyAttribute
+public class ParameterAttribute : PropertyAttribute
 {
     public string defaultName;
 
-    public LocalVariableAttribute(string defaultName)
+    public ParameterAttribute(string defaultName)
     {
         this.defaultName = defaultName;
     }
 
-    public LocalVariableAttribute()
+    public ParameterAttribute()
     {
     }
 }

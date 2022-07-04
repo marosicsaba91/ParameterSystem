@@ -5,9 +5,9 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class TransformParameters : MonoBehaviour
 {
-    [LocalVariable, SerializeField] Vector3Variable position; 
-    [LocalVariable, SerializeField] Vector3Variable localPosition; 
-    [LocalVariable, SerializeField] Vector3Variable velocity;
+    [Parameter, SerializeField] Vector3Variable position; 
+    [Parameter, SerializeField] Vector3Variable localPosition; 
+    [Parameter, SerializeField] Vector3Variable velocity;
 
     Vector3 _lastPos = new Vector3();
 
@@ -20,14 +20,12 @@ public class TransformParameters : MonoBehaviour
         if (position != null)
         { 
             position.otherObjectChangingWithVariable = new List<Object> { transform };
-            position.valueChanged -= OnPositionChanged;
-            position.valueChanged += OnPositionChanged;
+            // TODO
         } 
         if (localPosition != null)
         {
             localPosition.otherObjectChangingWithVariable = new List<Object> { transform };
-            localPosition.valueChanged -= OnLocalPositionChanged;
-            localPosition.valueChanged += OnLocalPositionChanged;
+            // TODO
         }
     }
     

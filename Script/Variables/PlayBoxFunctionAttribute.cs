@@ -11,7 +11,6 @@ public class PlayBoxFunctionAttribute : Attribute
     readonly string _displayName;
     readonly string _shortName;
     
-
     public PlayBoxFunctionAttribute() { }
 
     public PlayBoxFunctionAttribute(string uniqName, string displayName, string shortName)

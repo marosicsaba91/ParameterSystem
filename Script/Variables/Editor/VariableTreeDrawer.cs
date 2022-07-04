@@ -121,7 +121,7 @@ static class VariableTreeDrawer
 
             if (openable)
             {
-                bool isSelected = tree.variables.Count == 1 && Selection.Contains(tree.variables[0].gameObject);
+                bool isSelected = tree.variables.Count == 1 && Selection.Contains(tree.variables[0].GameObject);
                 var fullPos = new Rect(xBase, y, fullWidth, _lineH);
                 var intendedPos = new Rect(xIndented, y, indentedWidth, _lineH);
                 DrawRowColor(fullPos, isSelected);
@@ -158,7 +158,7 @@ static class VariableTreeDrawer
                 foreach (Variable variable in tree.variables)
                 {
                     GUIContent content = EditorGUIUtility.IconContent("GameObject Icon");
-                    content.text = variable.gameObject.name;
+                    content.text = variable.GameObject.name;
                     float variableHeight = VariableHeight(variable);
 
                     DrawVariable( xIndented, y, indentedWidth, xBase, fullWidth, variable, content, isGameObject: true, drawingType);
@@ -196,7 +196,7 @@ static class VariableTreeDrawer
         float valueWidth = fullWidth * 2f / 5f;
         EditorGUIUtility.labelWidth = invisibleLabelWidth;
 
-        Object obj = variable.gameObject;
+        Object obj = variable.GameObject;
 
         bool selected = drawingType == VariableTree.DrawingType.Window && Selection.Contains(obj); 
         float height = VariableHeight(variable);
@@ -265,15 +265,15 @@ static class VariableTreeDrawer
             position.height);
         var valuePos = new Rect(position.xMax - valueWidth, position.y, valueWidth, position.height); 
 
-        var recordText = $"Variable Value Changed: {variable.PathString} / {variable.name}";
+        var recordText = $"Variable Value Changed: {variable.NiceName}";
 
         EditorGUI.BeginChangeCheck();
         Undo.RecordObjects(variable.ChangingObjects.ToArray(), recordText);
 
         GUI.enabled = variable.isGUISettingEnabled; 
         
-        var serializedObject = new SerializedObject(variable);
-        var valueProperty = serializedObject.FindProperty("value");
+        var serializedObject = new SerializedObject(variable.sourceComponent); 
+        var valueProperty = serializedObject.FindProperty(variable.ElementName);
         
         int indent = EditorGUI.indentLevel;
         EditorGUI.indentLevel = 0;
@@ -287,7 +287,7 @@ static class VariableTreeDrawer
                 EditorGUI.PropertyField(valuePos, valueProperty, GUIContent.none);
              
             PropertyInfo valuePropertyInfo = variable.GetType().GetProperty("Value");
-            valuePropertyInfo.SetValue(variable, valueProperty.GetPropertyValue());
+            valuePropertyInfo.SetValue(variable, valueProperty.GetObjectOfProperty());
 
             serializedObject.ApplyModifiedProperties();
         }

@@ -18,8 +18,6 @@ public class TestAI : MonoBehaviour
         getColor = ai => ColorHelper.GradientLerp( ai.threatLevel, new Color(0.66f, 1f, 0.36f),
             Color.white,new Color(1f, 0.89f, 0.62f), new Color(1f, 0.44f, 0.31f))
     };
-
-    [SerializeField] InnerVariablesDashboard innerVariables;
-
+    
     public float ThreatLevel => threatLevel;
 } 
