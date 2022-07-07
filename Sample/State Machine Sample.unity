@@ -202,7 +202,7 @@ MonoBehaviour:
   myButton:
     functionZoom: 1
     functionOffset: {x: 0, y: 0}
-  myField:
+  myMember:
     functionZoom: 1
     functionOffset: {x: 0, y: 0}
   myProperty:
@@ -231,7 +231,7 @@ MonoBehaviour:
     functionZoom: 1
     functionOffset: {x: 0, y: 0}
   functionTest:
-    functionZoom: 1
+    functionZoom: 6.1527877
     functionOffset: {x: 0, y: 0}
   testObject: 0
 --- !u!4 &2283917
@@ -547,14 +547,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7de723dd2a8668843a56f19b55a70fb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  someMonoBehaviour:
-    value: {fileID: 0}
-  someCamera:
-    value: {fileID: 0}
-  someChildTransform:
-    value: {fileID: 565876420}
-  someTexture:
-    value: {fileID: 0}
+  message: {}
+  someMonoBehaviour: {value: {fileID: 0}}
+  someCamera: {value: {fileID: 0}}
+  someChildTransform: {value: {fileID: 565876420}}
+  someTexture: {value: {fileID: 0}}
 --- !u!4 &565876420
 Transform:
   m_ObjectHideFlags: 0
