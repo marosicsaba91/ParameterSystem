@@ -544,14 +544,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 565876418}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7de723dd2a8668843a56f19b55a70fb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f17f34314c3f4748853d8453f478c24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  message: {}
-  someMonoBehaviour: {value: {fileID: 0}}
-  someCamera: {value: {fileID: 0}}
-  someChildTransform: {value: {fileID: 565876420}}
-  someTexture: {value: {fileID: 0}}
+  col: {r: 1, g: 0.29797828, b: 0, a: 1}
+  enableA: 0
+  showA: 1
+  disableB: 0
+  hideB: 0
+  a: 0
+  b: 0
+  button:
+    functionZoom: 1
+    functionOffset: {x: 0, y: 0}
+  displayProperty:
+    functionZoom: 1
+    functionOffset: {x: 0, y: 0}
+  displayFunction:
+    functionZoom: 4.6550355
+    functionOffset: {x: 0, y: 0}
+  dirShowed:
+    functionZoom: 1
+    functionOffset: {x: 0, y: 0}
+  dir: 6
 --- !u!4 &565876420
 Transform:
   m_ObjectHideFlags: 0
