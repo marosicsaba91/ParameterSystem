@@ -1,4 +1,4 @@
 ﻿namespace PlayBox
 {
-public class StringVariable : ValueVariable<string> { }
+	public class StringVariable : ValueVariable<string> { }
 }

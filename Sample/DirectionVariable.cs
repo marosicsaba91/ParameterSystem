@@ -4,5 +4,5 @@ using UnityEngine;
 
 namespace PlayBox
 {
-public class DirectionVariable : ValueVariable<Direction2D> { }
+	public class DirectionVariable : ValueVariable<Direction2D> { }
 }

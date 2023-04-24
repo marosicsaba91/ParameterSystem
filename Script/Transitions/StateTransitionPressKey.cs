@@ -1,16 +1,16 @@
- using MUtility; 
- using UnityEngine;
+using MUtility;
+using UnityEngine;
 
 namespace PlayBox
 {
-public class StateTransitionPressKey : StateTransition
-{
-	[SerializeField, SearchEnum] KeyCode keyCode;
-
-	void Update()
+	public class StateTransitionPressKey : StateTransition
 	{
-		if(Input.GetKeyDown(keyCode))
-			InvokeTransition();
+		[SerializeField, SearchEnum] KeyCode keyCode;
+
+		void Update()
+		{
+			if (Input.GetKeyDown(keyCode))
+				InvokeTransition();
+		}
 	}
-}
 }

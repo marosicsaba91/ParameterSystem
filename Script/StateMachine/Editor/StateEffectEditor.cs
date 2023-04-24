@@ -1,18 +1,18 @@
 #if UNITY_EDITOR
- 
-using UnityEditor; 
+
+using UnityEditor;
 
 namespace PlayBox
-{ 
-[CustomEditor(typeof(StateEffect), editorForChildClasses:true)]
-public class StateEffectEditor : Editor
-{   
-	public override void OnInspectorGUI()
+{
+	[CustomEditor(typeof(StateEffect), editorForChildClasses: true)]
+	public class StateEffectEditor : Editor
 	{
-		DrawDefaultInspector();
+		public override void OnInspectorGUI()
+		{
+			DrawDefaultInspector();
+		}
+
 	}
- 
-}
 }
 
 #endif

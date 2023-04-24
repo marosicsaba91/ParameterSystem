@@ -1,4 +1,4 @@
 ﻿namespace PlayBox
 {
-public class IntVariable : ValueVariable<int> { }
+	public class IntVariable : ValueVariable<int> { }
 }

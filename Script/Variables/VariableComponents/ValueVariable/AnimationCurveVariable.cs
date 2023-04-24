@@ -2,5 +2,5 @@
 
 namespace PlayBox
 {
-public class AnimationCurveVariable : ValueVariable<AnimationCurve> { }
+	public class AnimationCurveVariable : ValueVariable<AnimationCurve> { }
 }

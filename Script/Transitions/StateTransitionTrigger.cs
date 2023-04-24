@@ -1,28 +1,28 @@
- using UnityEngine;
+using UnityEngine;
 
 namespace PlayBox
 {
-public class StateTransitionTrigger : StateTransition
-{
-	enum TriggerEvent
+	public class StateTransitionTrigger : StateTransition
 	{
-		Enter,
-		Exit
-	}
+		enum TriggerEvent
+		{
+			Enter,
+			Exit
+		}
 
-	[SerializeField] TriggerEvent triggerEvent;
- 
-	void OnTriggerEnter(Collider other)
-	{
-		if(triggerEvent == TriggerEvent.Enter)
-			InvokeTransition();
-	}
+		[SerializeField] TriggerEvent triggerEvent;
 
-	void OnTriggerExit(Collider other)
-	{ 
-		if(triggerEvent == TriggerEvent.Exit)
-			InvokeTransition();
-	}
+		void OnTriggerEnter(Collider other)
+		{
+			if (triggerEvent == TriggerEvent.Enter)
+				InvokeTransition();
+		}
 
-}
+		void OnTriggerExit(Collider other)
+		{
+			if (triggerEvent == TriggerEvent.Exit)
+				InvokeTransition();
+		}
+
+	}
 }

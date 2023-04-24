@@ -2,5 +2,5 @@
 
 namespace PlayBox
 {
-public class Vector2Variable : ValueVariable<Vector2> { }
+	public class Vector2Variable : ValueVariable<Vector2> { }
 }

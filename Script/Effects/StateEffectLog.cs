@@ -2,13 +2,13 @@ using UnityEngine;
 
 namespace PlayBox
 {
-public class StateEffectLog : StateEffect
-{
-	public string specialMessage = string.Empty;
-	public override void InvokeEffect(bool isEntering, State state)
+	public class StateEffectLog : StateEffect
 	{
-		Debug.Log($"{(isEntering ? "Enter" : "Exit")}: ({State.name})      {specialMessage}");
+		public string specialMessage = string.Empty;
+		public override void InvokeEffect(bool isEntering, State state)
+		{
+			Debug.Log($"{(isEntering ? "Enter" : "Exit")}: ({State.name})      {specialMessage}");
+		}
+
 	}
- 
-}
 }
