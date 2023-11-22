@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
+using EasyInspector;
 using MUtility;
 using UnityEditor;
 using UnityEngine;
@@ -25,9 +26,9 @@ namespace PlayBox
 		{
 			EditorHelper.DrawScriptLine(serializedObject);
 
-			var stateTransition = (StateTransition)target;
-			State state = stateTransition?.State;
-			State parentState = state?.ParentStateMachine;
+			StateTransition stateTransition = (StateTransition)target;
+			State state = stateTransition != null ? stateTransition.State : null;
+			State parentState = state != null ? state.ParentStateMachine : null;
 
 			Undo.RecordObject(stateTransition, "StateTransition Changed");
 
@@ -60,7 +61,7 @@ namespace PlayBox
 			}
 			else
 			{
-				var options = new List<State> { null };
+				List<State> options = new() { null };
 				int selectedIndex = 0;
 				int index = 1;
 				foreach (State s in parentState.SelectableInnerStates)

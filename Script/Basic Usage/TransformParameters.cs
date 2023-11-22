@@ -9,7 +9,7 @@ public class TransformParameters : MonoBehaviour
 	[Parameter, SerializeField] Vector3Variable localPosition;
 	[Parameter, SerializeField] Vector3Variable velocity;
 
-	Vector3 _lastPos = new Vector3();
+	Vector3 _lastPos = new();
 
 	void OnValidate() => Setup();
 

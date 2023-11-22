@@ -1,6 +1,6 @@
 ﻿#if UNITY_EDITOR
+using EasyInspector;
 using System.Collections.Generic;
-using MUtility;
 using UnityEditor;
 using UnityEngine;
 
@@ -38,7 +38,7 @@ namespace PlayBox
 
 		public float GetHeight(BlackBoard blackBoard)
 		{
-			VariableTree tree = new VariableTree(blackBoard.Variables);
+			VariableTree tree = new(blackBoard.Variables);
 			List<string> openedElements = blackBoard.openedVariables;
 			float treeHeight = VariableTreeDrawer.TreeHeight(tree, openedElements);
 			SetupHeight();

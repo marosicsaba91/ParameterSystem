@@ -8,7 +8,7 @@ namespace PlayBox
 	{
 		[SerializeField] GameObjectScope scope;
 
-		internal List<string> openedVariables = new List<string>();
+		internal List<string> openedVariables = new();
 		internal Vector2 scrollPosition;
 
 		List<Variable> _variables;

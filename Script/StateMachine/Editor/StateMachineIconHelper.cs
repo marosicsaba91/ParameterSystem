@@ -1,5 +1,5 @@
 ﻿#if UNITY_EDITOR
-using MUtility;
+using EasyInspector;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,7 +7,7 @@ namespace PlayBox
 {
 	static class StateMachineIconHelper
 	{
-		public static readonly Color gray = new Color(0.5f, 0.5f, 0.5f);
+		public static readonly Color gray = new(0.5f, 0.5f, 0.5f);
 
 		static StateType GetStateType(this State state)
 		{
@@ -67,22 +67,14 @@ namespace PlayBox
 
 		public static Color StateEditorColor(this State state) => state.GetStateType().StateEditorColor();
 
-		static Color StateEditorColor(this StateType stateType)
+		static Color StateEditorColor(this StateType stateType) => stateType switch
 		{
-			switch (stateType)
-			{
-				case StateType.Selectable:
-					return Color.white;
-				case StateType.Selected:
-					return EditorHelper.successGreenColor;
-				case StateType.SelectedButInactive:
-					return new Color(0.59f, 0.65f, 0.45f);
-				case StateType.Inactive:
-					return new Color(0.59f, 0.59f, 0.59f);
-				default:
-					return Color.red;
-			}
-		}
+			StateType.Selectable => Color.white,
+			StateType.Selected => EditorHelper.successGreenColor,
+			StateType.SelectedButInactive => new Color(0.59f, 0.65f, 0.45f),
+			StateType.Inactive => new Color(0.59f, 0.59f, 0.59f),
+			_ => Color.red,
+		};
 
 		public static GUIContent StateIcon(this State state)
 		{

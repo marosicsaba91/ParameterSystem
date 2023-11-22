@@ -10,9 +10,9 @@ namespace PlayBox
 	public class State : MonoBehaviour
 	{
 		[SerializeField, HideInInspector] StateMachineType stateMachineType = StateMachineType.OneEnabled;
-		[SerializeField, HideInInspector] internal List<State> innerStates = new List<State>();
-		[SerializeField, HideInInspector] List<State> selectedStates = new List<State>();
-		[SerializeField, HideInInspector] List<State> defaultStates = new List<State>();
+		[SerializeField, HideInInspector] internal List<State> innerStates = new();
+		[SerializeField, HideInInspector] List<State> selectedStates = new();
+		[SerializeField, HideInInspector] List<State> defaultStates = new();
 
 		[SerializeField, HideInInspector] public Color stateColor = Color.black;
 		[SerializeField, HideInInspector] State parentStateMachine;

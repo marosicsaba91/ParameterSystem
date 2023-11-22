@@ -29,7 +29,7 @@ namespace PlayBox
 		}
 
 		internal abstract Type ValueType { get; }
-		public List<string> _path = new List<string>();
+		public List<string> _path = new();
 		public IReadOnlyList<string> Path => _path;
 	}
 }

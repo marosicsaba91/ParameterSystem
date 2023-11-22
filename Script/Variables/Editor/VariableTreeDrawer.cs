@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using EasyInspector;
 using MUtility;
 using UnityEditor;
 using UnityEngine;
@@ -37,13 +38,13 @@ namespace PlayBox
 			_space = EditorGUIUtility.standardVerticalSpacing;
 			_indentW = EditorHelper.indentWidth;
 			_drawingType = drawingType;
-			var variableTree = new VariableTree(variables);
+			VariableTree variableTree = new(variables);
 			float treeHeight = TreeHeight(variableTree, openedElements);
 
 			const float scrollbarSize = 14;
 			float width = position.width;
 
-			var viewRect = new Rect(position.position, new Vector2(position.width, treeHeight));
+			Rect viewRect = new(position.position, new Vector2(position.width, treeHeight));
 			if (treeHeight > position.height)
 			{
 				viewRect.width -= scrollbarSize;
@@ -85,7 +86,7 @@ namespace PlayBox
 				else if (open)
 				{
 					foreach (Variable variable in tree.variables)
-						height += VariableHeight(variable) + _space;
+						height += VariableHeight() + _space;
 					height += _lineH + _space;
 				}
 			}
@@ -124,8 +125,8 @@ namespace PlayBox
 				if (openable)
 				{
 					bool isSelected = tree.variables.Count == 1 && Selection.Contains(tree.variables[0].GameObject);
-					var fullPos = new Rect(xBase, y, fullWidth, _lineH);
-					var intendedPos = new Rect(xIndented, y, indentedWidth, _lineH);
+					Rect fullPos = new(xBase, y, fullWidth, _lineH);
+					Rect intendedPos = new(xIndented, y, indentedWidth, _lineH);
 					DrawRowColor(fullPos, isSelected);
 
 					int indent = EditorGUI.indentLevel;
@@ -161,7 +162,7 @@ namespace PlayBox
 					{
 						GUIContent content = EditorGUIUtility.IconContent("GameObject Icon");
 						content.text = variable.GameObject.name;
-						float variableHeight = VariableHeight(variable);
+						float variableHeight = VariableHeight();
 
 						DrawVariable(xIndented, y, indentedWidth, xBase, fullWidth, variable, content, isGameObject: true, drawingType);
 
@@ -201,9 +202,9 @@ namespace PlayBox
 			Object obj = variable.GameObject;
 
 			bool selected = drawingType == VariableTree.DrawingType.Window && Selection.Contains(obj);
-			float height = VariableHeight(variable);
-			var fullRowPos = new Rect(xBase, y, fullWidth, height);
-			var fullValuePos = new Rect(xIndented, y, indentedWidth, height);
+			float height = VariableHeight();
+			Rect fullRowPos = new(xBase, y, fullWidth, height);
+			Rect fullValuePos = new(xIndented, y, indentedWidth, height);
 			if (name != GUIContent.none)
 			{
 				DrawRowColor(fullRowPos, selected);
@@ -245,7 +246,7 @@ namespace PlayBox
 			}
 		}
 
-		static float VariableHeight(Variable variable) => _lineH;
+		static float VariableHeight() => _lineH;
 
 		static void DrawRowColor(Rect position, bool selected)
 		{
@@ -260,12 +261,12 @@ namespace PlayBox
 
 		static void DrawVariableValue(Rect position, float valueWidth, Variable variable)
 		{
-			var numberValuePos = new Rect(
+			Rect numberValuePos = new(
 				position.xMax - (valueWidth + invisibleLabelWidth + 2),
 				position.y,
 				invisibleLabelWidth + valueWidth + 2,
 				position.height);
-			var valuePos = new Rect(position.xMax - valueWidth, position.y, valueWidth, position.height);
+			Rect valuePos = new(position.xMax - valueWidth, position.y, valueWidth, position.height);
 
 			string recordText = $"Variable Value Changed: {variable.NiceName}";
 
@@ -274,7 +275,7 @@ namespace PlayBox
 
 			GUI.enabled = variable.isGUISettingEnabled;
 
-			var serializedObject = new SerializedObject(variable.sourceComponent);
+			SerializedObject serializedObject = new(variable.sourceComponent);
 			SerializedProperty valueProperty = serializedObject.FindProperty(variable.ElementName);
 
 			int indent = EditorGUI.indentLevel;

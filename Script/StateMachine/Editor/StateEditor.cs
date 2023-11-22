@@ -1,6 +1,6 @@
 #if UNITY_EDITOR
+using EasyInspector;
 using System.Collections.Generic;
-using MUtility;
 using UnityEditor;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
@@ -11,10 +11,10 @@ namespace PlayBox
 	public class StateEditor : Editor
 	{
 		const string editorPrefsKey = "OpenedStates";
-		public static readonly Color gray = new Color(0.5f, 0.5f, 0.5f);
-		static GUIStyle _guiStyle = new GUIStyle();
+		public static readonly Color gray = new(0.5f, 0.5f, 0.5f);
+		static GUIStyle _guiStyle = new();
 
-		[SerializeField] List<State> openStates = new List<State>();
+		[SerializeField] List<State> openStates = new();
 
 		static GUIStyle _leftButtonStyle;
 		public static GUIStyle LeftButtonStyle =>
@@ -54,7 +54,7 @@ namespace PlayBox
 
 		public override void OnInspectorGUI()
 		{
-			var state = (State)target;
+			State state = (State)target;
 			State parent = state?.ParentStateMachine;
 
 			DrawDefaultInspector();
@@ -91,8 +91,8 @@ namespace PlayBox
 		static void CreateInnerState(State state)
 		{
 			GameObject go = state.gameObject;
-			var childGO = new GameObject();
-			var childState = (State)childGO.AddComponent(state.GetType());
+			GameObject childGO = new();
+			State childState = (State)childGO.AddComponent(state.GetType());
 			childState.stateColor = state.stateColor;
 			childGO.name = "New State";
 			childGO.transform.parent = go.transform;
@@ -126,7 +126,7 @@ namespace PlayBox
 			float indentsWidth = indent * EditorHelper.indentWidth;
 
 			// Toggle
-			var toggleRect = new Rect(rowRect.x + indentsWidth, rowRect.y, defaultToggleWith, rowRect.height);
+			Rect toggleRect = new(rowRect.x + indentsWidth, rowRect.y, defaultToggleWith, rowRect.height);
 			bool isDefault = state.IsDefaultSate;
 			GUI.enabled = state.ParentStateMachine != null && !Application.isPlaying;
 			string toolTip = isDefault ? "Default State" : "Not Default State";
@@ -142,7 +142,7 @@ namespace PlayBox
 			}
 
 			// COLOR
-			var colorRect = new Rect(toggleRect.x + colorFieldSize, rowRect.y + 1, colorFieldSize, colorFieldSize);
+			Rect colorRect = new(toggleRect.x + colorFieldSize, rowRect.y + 1, colorFieldSize, colorFieldSize);
 			Color newColor = EditorGUI.ColorField(colorRect, GUIContent.none, state.stateColor, false, false, false);
 			newColor.a = 1;
 			if (newColor != state.stateColor)
@@ -152,7 +152,7 @@ namespace PlayBox
 			}
 
 			float buttonWidth = rowRect.width - indentsWidth - (defaultToggleWith) - colorFieldSize - (2 * actionButtonWith) - (3 * space);
-			var buttonRect = new Rect(colorRect.xMax + space, rowRect.y, buttonWidth,
+			Rect buttonRect = new(colorRect.xMax + space, rowRect.y, buttonWidth,
 				rowRect.height);
 
 			// INNER STATES 
@@ -172,9 +172,9 @@ namespace PlayBox
 
 				buttonRect.width -= stateMachineTypeWidth + space;
 				GUI.enabled = !Application.isPlaying;
-				var typeRect = new Rect(buttonRect.xMax + space, buttonRect.y, stateMachineTypeWidth, buttonRect.height);
+				Rect typeRect = new(buttonRect.xMax + space, buttonRect.y, stateMachineTypeWidth, buttonRect.height);
 				StateMachineType type = state.StateMachineType;
-				var newType = (StateMachineType)EditorGUI.EnumPopup(typeRect, type);
+				StateMachineType newType = (StateMachineType)EditorGUI.EnumPopup(typeRect, type);
 				if (type != newType)
 				{
 					Undo.RecordObject(state, "States Type Changed");
@@ -202,7 +202,7 @@ namespace PlayBox
 			GUI.color = Color.white;
 
 			// ADD BUTTON
-			var actionButtonRect = new Rect(rowRect.xMax - (2 * actionButtonWith) - space, rowRect.y, actionButtonWith, rowRect.height);
+			Rect actionButtonRect = new(rowRect.xMax - (2 * actionButtonWith) - space, rowRect.y, actionButtonWith, rowRect.height);
 			GUIContent insertContent = EditorGUIUtility.IconContent("CreateAddNew");
 			insertContent.tooltip = "Add Inner State";
 			if (GUI.Button(actionButtonRect, insertContent))
@@ -221,7 +221,7 @@ namespace PlayBox
 
 		static void DrawHierarchyIcon(int instance, Rect selectionRect)
 		{
-			var gameObject = (GameObject)EditorUtility.InstanceIDToObject(instance);
+			GameObject gameObject = (GameObject)EditorUtility.InstanceIDToObject(instance);
 			if (gameObject == null)
 				return;
 			State state = gameObject.GetComponent<State>();
@@ -230,7 +230,7 @@ namespace PlayBox
 				return;
 
 			Vector2 textSize = _guiStyle.CalcSize(new GUIContent(gameObject.name));
-			var iconRect = new Rect(selectionRect)
+			Rect iconRect = new(selectionRect)
 			{
 				x = selectionRect.x + textSize.x + 25,
 				y = selectionRect.y - 1,
@@ -241,7 +241,7 @@ namespace PlayBox
 			EditorGUI.LabelField(iconRect, iconGUIContent);
 			if (state.IsDefaultSate && state.ParentStateMachine != null)
 			{
-				var defaultIconRect = new Rect(iconRect) { x = iconRect.x + 14, y = iconRect.y - 0 };
+				Rect defaultIconRect = new(iconRect) { x = iconRect.x + 14, y = iconRect.y - 0 };
 				EditorGUI.LabelField(defaultIconRect, StateMachineIconHelper.defaultState);
 			}
 		}

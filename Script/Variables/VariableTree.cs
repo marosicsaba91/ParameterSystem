@@ -63,7 +63,7 @@ namespace PlayBox
 			if (children.ContainsKey(category))
 				return children[category];
 
-			var child = new VariableTree(category, this);
+			VariableTree child = new(category, this);
 			children.Add(category, child);
 			return child;
 		}

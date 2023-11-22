@@ -1,5 +1,5 @@
 ﻿using System;
-using MUtility;
+using EasyInspector;
 using PlayBox;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -25,9 +25,4 @@ public class VariableTester : MonoBehaviour
 	[FormerlySerializedAs("directionParameter")][SerializeField] DirectionVariable directionVariable;
 	[SerializeField] DateTimeVariable dateTimeVariable;
 	[SerializeField][SearchEnum] KeyCode testSearchEnum;
-
-	void OnEnable()
-	{
-
-	}
 }
