@@ -1,5 +1,5 @@
 #if UNITY_EDITOR
-using EasyInspector;
+using EasyEditor;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;

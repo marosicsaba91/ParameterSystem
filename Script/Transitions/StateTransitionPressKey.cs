@@ -1,4 +1,4 @@
-using EasyInspector;
+using EasyEditor;
 using UnityEngine;
 
 namespace PlayBox

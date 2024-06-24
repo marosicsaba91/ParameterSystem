@@ -1,5 +1,5 @@
 ﻿using System;
-using EasyInspector;
+using EasyEditor;
 using PlayBox;
 using UnityEngine;
 using UnityEngine.Serialization;
